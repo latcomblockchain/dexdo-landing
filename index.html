@@ -92,6 +92,20 @@
   .ob-foot{padding:11px 16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted)}
   .ob-foot b{color:var(--accent);font-weight:500}
 
+  /* order book — live (prices from OpenRouter) */
+  .ob-modelwrap{position:relative;display:inline-block}
+  .ob-modelwrap::after{content:"▾";position:absolute;right:2px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--dim);pointer-events:none}
+  .ob-model{appearance:none;-webkit-appearance:none;background:transparent;border:0;margin:0;color:var(--text);font-family:var(--mono);font-size:12.5px;font-weight:500;cursor:pointer;padding:0 16px 0 0;line-height:1.2}
+  .ob-model:focus{outline:none}
+  .ob-model:focus-visible{outline:1px solid var(--accent);outline-offset:2px;border-radius:3px}
+  .ob-model option{background:#0c0f13;color:var(--text)}
+  .ob-live{display:inline-flex;align-items:center;gap:6px}
+  .ob-live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--bid);box-shadow:0 0 7px var(--bid);animation:obpulse 1.7s ease-in-out infinite}
+  @keyframes obpulse{0%,100%{opacity:.3}50%{opacity:1}}
+  .lvl{transition:background .55s ease}
+  .lvl.chg{background:rgba(255,255,255,.05);transition:background .04s ease}
+  @media (prefers-reduced-motion: reduce){.ob-live::before{animation:none;opacity:.85}}
+
   /* model strip — static */
   .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:38px;padding:18px 0}
   .strip-in{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
@@ -224,31 +238,31 @@ export <span class="k">OPENAI_API_KEY</span>=<span class="s">"dex_…"</span>
       </div>
     </div>
 
-    <!-- SIGNATURE: static order book -->
-    <div class="ob reveal d4" aria-hidden="true">
+    <!-- SIGNATURE: live order book (prices from OpenRouter) -->
+    <div class="ob reveal d4" id="ob">
       <div class="ob-head">
-        <div class="ob-sym">gpt-5.5-codex <span class="muted">· CODEX-TICK</span></div>
-        <div class="ob-label">Order book</div>
+        <div class="ob-sym"><span class="ob-modelwrap"><select class="ob-model" id="obModel" aria-label="Model"></select></span> <span class="muted" id="obTicker">· CODEX-TICK</span></div>
+        <div class="ob-label"><span class="ob-live">Order book</span></div>
       </div>
       <div class="ob-cols"><span data-i18n="ob.price">Price · SHELL/tick</span><span data-i18n="ob.size">Size · ticks</span></div>
-      <div class="ladder">
-        <div class="lvl ask"><span class="bar" style="width:74%"></span><span class="px">3,740</span><span class="qty">128</span></div>
-        <div class="lvl ask"><span class="bar" style="width:46%"></span><span class="px">3,690</span><span class="qty">74</span></div>
-        <div class="lvl ask"><span class="bar" style="width:30%"></span><span class="px">3,650</span><span class="qty">41</span></div>
-        <div class="lvl ask"><span class="bar" style="width:38%"></span><span class="px">3,520</span><span class="qty">56</span></div>
+      <div class="ladder" id="obAsks">
+        <div class="lvl ask"><span class="bar"></span><span class="px"></span><span class="qty"></span></div>
+        <div class="lvl ask"><span class="bar"></span><span class="px"></span><span class="qty"></span></div>
+        <div class="lvl ask"><span class="bar"></span><span class="px"></span><span class="qty"></span></div>
+        <div class="lvl ask"><span class="bar"></span><span class="px"></span><span class="qty"></span></div>
       </div>
       <div class="spread">
-        <span data-i18n="ob.spread">spread 20</span>
-        <span class="mid">3,500</span>
+        <span id="obSpread">spread 20</span>
+        <span class="mid" id="obMid">3,500</span>
         <span data-i18n="ob.mid">mid</span>
       </div>
-      <div class="ladder">
-        <div class="lvl bid"><span class="bar" style="width:42%"></span><span class="px">3,480</span><span class="qty">63</span></div>
-        <div class="lvl bid"><span class="bar" style="width:28%"></span><span class="px">3,440</span><span class="qty">39</span></div>
-        <div class="lvl bid"><span class="bar" style="width:55%"></span><span class="px">3,390</span><span class="qty">88</span></div>
-        <div class="lvl bid"><span class="bar" style="width:33%"></span><span class="px">3,200</span><span class="qty">47</span></div>
+      <div class="ladder" id="obBids">
+        <div class="lvl bid"><span class="bar"></span><span class="px"></span><span class="qty"></span></div>
+        <div class="lvl bid"><span class="bar"></span><span class="px"></span><span class="qty"></span></div>
+        <div class="lvl bid"><span class="bar"></span><span class="px"></span><span class="qty"></span></div>
+        <div class="lvl bid"><span class="bar"></span><span class="px"></span><span class="qty"></span></div>
       </div>
-      <div class="ob-foot" data-i18n-html data-i18n="ob.foot">Secondary: hedge <b>CODEX price → T+30d</b> · settled from this book</div>
+      <div class="ob-foot" id="obFoot">Secondary: hedge <b>CODEX-TICK → T+30d</b> · settled from this book</div>
     </div>
   </div>
 
@@ -593,6 +607,98 @@ export <span class="k">OPENAI_API_KEY</span>=<span class="s">"dex_…"</span>
     document.getElementById('formOk').style.display='block';
   });
   function val(id){return (document.getElementById(id).value||'').trim();}
+</script>
+<script>
+/* ---- live order book (demo) · per-token prices from OpenRouter ---- */
+(function(){
+  var elModel=document.getElementById('obModel'), elTicker=document.getElementById('obTicker'),
+      elMid=document.getElementById('obMid'), elSpread=document.getElementById('obSpread'),
+      elFoot=document.getElementById('obFoot'),
+      asks=[].slice.call(document.querySelectorAll('#obAsks .lvl')),
+      bids=[].slice.call(document.querySelectorAll('#obBids .lvl'));
+  if(!elModel) return;
+
+  // baked snapshot: out = OpenRouter completion price, USD per 1M tokens (June 2026)
+  var K=250; // SHELL per (USD per 1M tok)
+  var MODELS=[
+    {id:'openai/gpt-5.3-codex',       label:'gpt-5.3-codex',     ticker:'CODEX-TICK',    out:14.0},
+    {id:'openai/gpt-5.5',             label:'gpt-5.5',           ticker:'GPT55-TICK',    out:30.0},
+    {id:'anthropic/claude-opus-4.8',  label:'claude-opus-4.8',   ticker:'OPUS-TICK',     out:25.0},
+    {id:'anthropic/claude-sonnet-4.6',label:'claude-sonnet-4.6', ticker:'SONNET-TICK',   out:15.0},
+    {id:'google/gemini-2.5-pro',      label:'gemini-2.5-pro',    ticker:'GEMINI-TICK',   out:10.0},
+    {id:'x-ai/grok-4.3',              label:'grok-4.3',          ticker:'GROK-TICK',     out:2.5},
+    {id:'moonshotai/kimi-k2.6',       label:'kimi-k2.6',         ticker:'KIMI-TICK',     out:3.41},
+    {id:'qwen/qwen3-coder',           label:'qwen3-coder',       ticker:'QWEN-TICK',     out:1.8},
+    {id:'google/gemini-2.5-flash',    label:'gemini-2.5-flash',  ticker:'FLASH-TICK',    out:2.5},
+    {id:'deepseek/deepseek-chat-v3.1',label:'deepseek-v3.1',     ticker:'DEEPSEEK-TICK', out:0.79}
+  ];
+  var cur=0, book=null, timer=null;
+  var rnd=function(a,b){return a+Math.random()*(b-a);};
+  var ri=function(a,b){return Math.round(rnd(a,b));};
+  var fmt=function(n){return Math.round(n).toLocaleString('en-US');};
+  var lang=function(){var a=document.querySelector('.lang button.active');return a&&a.dataset.lang==='ru'?'ru':'en';};
+  var midOf=function(m){return Math.max(40, Math.round(m.out*K));};
+
+  function genBook(){
+    var mid=midOf(MODELS[cur]);
+    var h=Math.max(1, Math.round(mid*0.003));
+    var g=Math.max(1, Math.round(mid*0.009));
+    var aOff=[], bOff=[], ao=h, bo=h;
+    for(var k=0;k<4;k++){ aOff.push(ao); bOff.push(bo); ao+=ri(g, Math.round(g*2.2)); bo+=ri(g, Math.round(g*2.2)); }
+    var q=function(){return ri(28,150);};
+    book={base:mid, mid:mid, aOff:aOff, bOff:bOff, aQty:[q(),q(),q(),q()], bQty:[q(),q(),q(),q()]};
+  }
+  function walk(){
+    if(!book) return; var b=book;
+    b.mid += rnd(-1,1)*Math.max(1,Math.round(b.base*0.0009)) + (b.base-b.mid)*0.05;
+    if(Math.random()<0.18) b.mid += rnd(-1,1)*Math.max(1,Math.round(b.base*0.004));
+    var bump=function(arr,i){ arr[i]+=ri(-7,7); if(Math.random()<0.07) arr[i]=ri(28,160); if(arr[i]<18)arr[i]=18; if(arr[i]>175)arr[i]=175; };
+    for(var k=0;k<4;k++){ bump(b.aQty,k); bump(b.bQty,k); }
+  }
+  function paint(){
+    if(!book) return; var b=book, m=MODELS[cur];
+    var maxq=1,k; for(k=0;k<4;k++){ maxq=Math.max(maxq,b.aQty[k],b.bQty[k]); }
+    var setRow=function(row,px,qty){
+      var pe=row.querySelector('.px'), qe=row.querySelector('.qty'), be=row.querySelector('.bar');
+      var qv=String(qty);
+      if(qe.textContent!==qv){ row.classList.add('chg'); setTimeout(function(){row.classList.remove('chg');},380); }
+      pe.textContent=fmt(px); qe.textContent=qv; be.style.width=Math.round(qty/maxq*100)+'%';
+    };
+    for(k=0;k<4;k++){ setRow(asks[k], b.mid + b.aOff[3-k], b.aQty[3-k]); }
+    for(k=0;k<4;k++){ setRow(bids[k], b.mid - b.bOff[k], b.bQty[k]); }
+    elMid.textContent=fmt(b.mid);
+    elSpread.textContent=(lang()==='ru'?'спред ':'spread ')+(b.aOff[0]+b.bOff[0]);
+    elTicker.textContent='· '+m.ticker;
+    elFoot.innerHTML=(lang()==='ru'
+      ? 'Вторичка: хедж <b>цены '+m.ticker+' → T+30д</b> · сеттл из этого стакана'
+      : 'Secondary: hedge <b>'+m.ticker+' → T+30d</b> · settled from this book');
+  }
+  function setModel(i){ cur=i; genBook(); paint(); }
+  function start(){ if(timer)return; var r=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; if(r)return; timer=setInterval(function(){ walk(); paint(); },1600); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} }
+
+  MODELS.forEach(function(m,i){ var o=document.createElement('option'); o.value=i; o.textContent=m.label; elModel.appendChild(o); });
+  elModel.value='0';
+  elModel.addEventListener('change', function(){ setModel(parseInt(elModel.value,10)||0); });
+  setModel(0); start();
+
+  document.addEventListener('visibilitychange', function(){ if(document.hidden) stop(); else start(); });
+  document.querySelectorAll('.lang button').forEach(function(b){ b.addEventListener('click', function(){ setTimeout(paint,0); }); });
+
+  // best-effort live refresh from OpenRouter; keeps baked snapshot on any failure
+  try{
+    fetch('https://openrouter.ai/api/v1/models',{headers:{'Accept':'application/json'}})
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(j){
+        if(!j||!j.data) return; var map={};
+        j.data.forEach(function(m){ var c=m.pricing&&parseFloat(m.pricing.completion); if(c>0) map[m.id]=c*1e6; });
+        var changed=false;
+        MODELS.forEach(function(m){ if(map[m.id]){ m.out=map[m.id]; changed=true; } });
+        if(changed){ genBook(); paint(); }
+      })
+      .catch(function(){});
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
