@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEX.DO — The private marketplace for AI inference</title>
+<meta name="description" content="DEX.DO is a token marketplace for AI model access, built on Dark Order infrastructure. Buy model access at the best price through one OpenAI-compatible API, and hedge your future inference cost." />
+<meta property="og:title" content="DEX.DO — The private marketplace for AI inference" />
+<meta property="og:description" content="Buy AI model access at the best price through one OpenAI-compatible API. Pay as you go. Hedge what inference will cost you." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0B0D; --surface:#101317; --surface2:#14181D; --line:#22272E; --line2:#2D333B;
+    --text:#E9EBEE; --muted:#878E97; --dim:#565d66;
+    --accent:#6AA0FF; --accent-2:#3E6FD1;
+    --ask:#E5484D; --bid:#3DB07A;
+    --glow:rgba(106,160,255,.09);
+    --disp:'Inter Tight',sans-serif; --ui:'Inter',sans-serif; --mono:'IBM Plex Mono',monospace;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--ui);line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:16px}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-left:24px;padding-right:24px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  h1,h2,h3{font-family:var(--disp);font-weight:600;letter-spacing:-0.02em;margin:0;color:var(--text)}
+  .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--ui);font-weight:500;font-size:14.5px;
+    padding:11px 18px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:.16s;white-space:nowrap}
+  .btn-primary{background:var(--text);color:#0a0c0f;border-color:var(--text)}
+  .btn-primary:hover{background:#fff}
+  .btn-ghost{background:transparent;color:var(--text);border-color:var(--line2)}
+  .btn-ghost:hover{border-color:var(--muted)}
+  .btn-sm{padding:8px 14px;font-size:13.5px}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+  /* header */
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);
+    background:rgba(10,11,13,.8);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:60px;gap:20px}
+  .brand{font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:.01em;display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .brand .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);border:1px solid var(--line2);padding:3px 7px;border-radius:4px}
+  .nav-links{display:flex;align-items:center;gap:26px;margin-left:auto}
+  .nav-links a{font-size:14px;color:var(--muted);transition:.15s}
+  .nav-links a:hover{color:var(--text)}
+  .nav-cta{display:flex;align-items:center;gap:10px}
+  .lang{display:inline-flex;border:1px solid var(--line2);border-radius:7px;overflow:hidden}
+  .lang button{background:transparent;border:none;color:var(--muted);font-family:var(--mono);font-size:11px;
+    padding:6px 9px;cursor:pointer;transition:.15s}
+  .lang button.active{background:var(--surface2);color:var(--text)}
+
+  /* hero */
+  .hero{position:relative;padding:78px 0 50px}
+  .hero::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(820px 380px at 80% 4%,var(--glow),transparent 72%);pointer-events:none}
+  .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:50px;align-items:center;position:relative}
+  h1.hero-h{font-size:clamp(33px,4.3vw,52px);line-height:1.05;font-weight:700}
+  .hero-sub{color:var(--muted);font-size:17.5px;max-width:540px;margin:22px 0 28px}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+  .codecard{font-family:var(--mono);font-size:12.5px;background:#0c0f13;border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px;color:#b9c2cc;max-width:520px;line-height:1.9;overflow-x:auto}
+  .codecard .c{color:var(--dim)}
+  .codecard .k{color:var(--accent)}
+  .codecard .s{color:#9aa7b4}
+  .reveal{opacity:0;transform:translateY(10px);animation:rise .6s cubic-bezier(.2,.7,.3,1) forwards}
+  .reveal.d2{animation-delay:.06s}.reveal.d3{animation-delay:.12s}.reveal.d4{animation-delay:.18s}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* order book — static, restrained */
+  .ob{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .ob-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line)}
+  .ob-sym{font-family:var(--mono);font-size:12.5px;font-weight:500}
+  .ob-sym .muted{color:var(--muted)}
+  .ob-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+  .ob-cols{display:flex;justify-content:space-between;padding:9px 16px 5px;font-family:var(--mono);
+    font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+  .ladder{font-family:var(--mono);font-size:12.5px;padding:1px 0 5px}
+  .lvl{position:relative;display:flex;justify-content:space-between;padding:3.5px 16px;z-index:1}
+  .lvl .qty{color:var(--muted)}
+  .lvl .bar{position:absolute;top:0;bottom:0;right:0;z-index:-1;opacity:.10}
+  .lvl.ask .px{color:var(--ask)} .lvl.ask .bar{background:var(--ask)}
+  .lvl.bid .px{color:var(--bid)} .lvl.bid .bar{background:var(--bid)}
+  .spread{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;
+    background:#0c0f13;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .spread .mid{color:var(--text);font-weight:500;font-size:14px}
+  .ob-foot{padding:11px 16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .ob-foot b{color:var(--accent);font-weight:500}
+
+  /* model strip — static */
+  .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:38px;padding:18px 0}
+  .strip-in{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .strip .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);flex-shrink:0}
+  .strip .models{font-family:var(--mono);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 18px}
+  .strip .models b{color:var(--text);font-weight:500}
+
+  /* sections */
+  section{padding-top:74px;padding-bottom:74px}
+  .sec-head{max-width:660px;margin-bottom:42px}
+  .sec-head h2{font-size:clamp(25px,2.9vw,35px);line-height:1.12;margin-top:11px}
+  .sec-head p{color:var(--muted);font-size:16.5px;margin:14px 0 0}
+
+  .problem{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  .problem .p{border-left:2px solid var(--line2);padding:2px 0 2px 18px}
+  .problem .p h3{font-size:18px;margin-bottom:7px;font-weight:600}
+  .problem .p p{color:var(--muted);font-size:15px;margin:0}
+
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px;transition:.18s}
+  .card:hover{border-color:var(--line2)}
+  .card .num{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em}
+  .card h3{font-size:19px;margin:13px 0 9px;font-weight:600}
+  .card.featured{border-color:var(--accent-2)}
+  .card.featured .num{color:var(--accent)}
+  .card p{color:var(--muted);font-size:14.5px;margin:0}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .step{padding:28px 24px;border-right:1px solid var(--line)}
+  .step:last-child{border-right:none}
+  .step .n{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:500}
+  .step h3{font-size:18px;margin:12px 0 9px;font-weight:600}
+  .step p{color:var(--muted);font-size:14px;margin:0}
+
+  .sellers{background:var(--surface2);border:1px solid var(--line);border-radius:14px;
+    padding:42px;display:flex;gap:36px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .sellers .l{max-width:560px}
+  .sellers h2{font-size:clamp(23px,2.5vw,30px);margin-bottom:12px;font-weight:600}
+  .sellers p{color:var(--muted);font-size:15.5px;margin:0}
+
+  .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .trust .t{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+  .trust .t .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .trust .t p{color:var(--muted);font-size:13.5px;margin:9px 0 0}
+  .trust .t p b{color:var(--text);font-weight:600}
+
+  /* form */
+  .form-sec{background:radial-gradient(640px 320px at 50% -12%,var(--glow),transparent 72%)}
+  .formcard{background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:40px;max-width:740px;margin:0 auto}
+  .formcard h2{font-size:clamp(25px,2.9vw,33px);text-align:center;font-weight:600}
+  .formcard .lead{color:var(--muted);text-align:center;margin:13px auto 28px;max-width:500px;font-size:15.5px}
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field.full{grid-column:1/-1}
+  .field label{font-size:13px;color:var(--muted);font-weight:500}
+  .field label .req{color:var(--ask)}
+  .field input,.field select,.field textarea{background:#0c0f13;border:1px solid var(--line2);border-radius:8px;
+    padding:11px 13px;color:var(--text);font-family:var(--ui);font-size:14.5px;transition:.15s}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);outline:none}
+  .field textarea{resize:vertical;min-height:80px}
+  .form-submit{margin-top:6px;display:flex;flex-direction:column;align-items:center;gap:11px}
+  .form-note{font-size:12px;color:var(--dim);text-align:center}
+  .form-ok{display:none;text-align:center;padding:28px;font-size:16px;color:var(--text);font-family:var(--disp)}
+
+  footer{border-top:1px solid var(--line);padding:38px 0;margin-top:18px}
+  .foot-in{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px}
+  .foot-l{display:flex;flex-direction:column;gap:8px}
+  .foot-links{display:flex;gap:22px;font-size:13.5px;color:var(--muted);flex-wrap:wrap}
+  .foot-social{display:flex;gap:14px}
+  .foot-social a{color:var(--muted);font-family:var(--mono);font-size:12px}
+  .foot-social a:hover{color:var(--text)}
+  .foot-note{font-family:var(--mono);font-size:11px;color:var(--dim)}
+
+  @media (max-width:880px){
+    .hero-grid{grid-template-columns:1fr;gap:34px}
+    .problem,.cards,.steps,.trust{grid-template-columns:1fr}
+    .trust{grid-template-columns:1fr 1fr}
+    .step{border-right:none;border-bottom:1px solid var(--line)}.step:last-child{border-bottom:none}
+    .fgrid{grid-template-columns:1fr}
+    .nav-links{display:none}
+    .formcard,.sellers{padding:26px}
+    section{padding-top:54px;padding-bottom:54px}
+  }
+  @media (prefers-reduced-motion:reduce){.reveal{animation:none;opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <div class="brand">DEX.DO <span class="tag" data-i18n="brand.tag">AI token marketplace</span></div>
+    <nav class="nav-links">
+      <a href="#why" data-i18n="nav.why">Why</a>
+      <a href="#how" data-i18n="nav.how">How it works</a>
+      <a href="#sellers" data-i18n="nav.sellers">For sellers</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <div class="lang" role="group" aria-label="Language">
+        <button data-lang="en" class="active">EN</button>
+        <button data-lang="ru">RU</button>
+      </div>
+      <a class="btn btn-ghost btn-sm" href="https://dexdo-season-lar4zz4ww-amirlat007-4493s-projects.vercel.app/" target="_blank" rel="noopener" data-i18n="btn.season">Season ↗</a>
+      <a class="btn btn-primary btn-sm" href="#access" data-i18n="btn.access">Get early access</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow reveal" data-i18n="hero.eyebrow">Private · OpenAI-compatible · pre-launch</div>
+      <h1 class="hero-h reveal d2" style="margin-top:16px" data-i18n-html data-i18n="hero.h">
+        The private marketplace for AI inference.
+      </h1>
+      <p class="hero-sub reveal d3" data-i18n="hero.sub">
+        DEX.DO is a token marketplace for AI model access, built on Dark Order infrastructure.
+        Route to the best seller through one OpenAI-compatible API, pay per token as you go,
+        and lock in your future inference cost on the secondary market.
+      </p>
+      <div class="hero-cta reveal d3">
+        <a class="btn btn-primary" href="#access" data-i18n="btn.access2">Get early access</a>
+        <a class="btn btn-ghost" href="#access" data-role="demo" data-i18n="btn.demo">Book a demo</a>
+      </div>
+      <div class="codecard reveal d4">
+<span class="c"># drop-in — change one base URL, keep your code</span><br>
+export <span class="k">OPENAI_BASE_URL</span>=<span class="s">"https://api.dex.do/v1"</span><br>
+export <span class="k">OPENAI_API_KEY</span>=<span class="s">"dex_…"</span>
+      </div>
+    </div>
+
+    <!-- SIGNATURE: static order book -->
+    <div class="ob reveal d4" aria-hidden="true">
+      <div class="ob-head">
+        <div class="ob-sym">gpt-5.5-codex <span class="muted">· CODEX-TICK</span></div>
+        <div class="ob-label">Order book</div>
+      </div>
+      <div class="ob-cols"><span data-i18n="ob.price">Price · SHELL/tick</span><span data-i18n="ob.size">Size · ticks</span></div>
+      <div class="ladder">
+        <div class="lvl ask"><span class="bar" style="width:74%"></span><span class="px">3,740</span><span class="qty">128</span></div>
+        <div class="lvl ask"><span class="bar" style="width:46%"></span><span class="px">3,690</span><span class="qty">74</span></div>
+        <div class="lvl ask"><span class="bar" style="width:30%"></span><span class="px">3,650</span><span class="qty">41</span></div>
+        <div class="lvl ask"><span class="bar" style="width:38%"></span><span class="px">3,520</span><span class="qty">56</span></div>
+      </div>
+      <div class="spread">
+        <span data-i18n="ob.spread">spread 20</span>
+        <span class="mid">3,500</span>
+        <span data-i18n="ob.mid">mid</span>
+      </div>
+      <div class="ladder">
+        <div class="lvl bid"><span class="bar" style="width:42%"></span><span class="px">3,480</span><span class="qty">63</span></div>
+        <div class="lvl bid"><span class="bar" style="width:28%"></span><span class="px">3,440</span><span class="qty">39</span></div>
+        <div class="lvl bid"><span class="bar" style="width:55%"></span><span class="px">3,390</span><span class="qty">88</span></div>
+        <div class="lvl bid"><span class="bar" style="width:33%"></span><span class="px">3,200</span><span class="qty">47</span></div>
+      </div>
+      <div class="ob-foot" data-i18n-html data-i18n="ob.foot">Secondary: hedge <b>CODEX price → T+30d</b> · settled from this book</div>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div class="wrap strip-in">
+      <span class="lbl" data-i18n="strip.lbl">Model coverage</span>
+      <span class="models">
+        <b>gpt-5.5-codex</b><b>claude-opus-4.8</b><b>gemini-3.1-pro</b><b>deepseek-v4</b><b>qwen-3</b>
+        <b>mistral-large</b><b>grok-3</b><b>llama-4</b><b>kimi-k2</b><span data-i18n="strip.more">and more</span>
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="why" class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow" data-i18n="problem.eyebrow">The problem</div>
+    <h2 data-i18n="problem.h">Your AI bill is unpredictable, and the middleman keeps the margin.</h2>
+  </div>
+  <div class="problem">
+    <div class="p">
+      <h3 data-i18n="p1.h">Aggregators don't make it cheaper</h3>
+      <p data-i18n="p1.b">Centralized routers add a fixed markup on top of provider prices. Convenient — but you pay for it on every token, with no price you can plan around.</p>
+    </div>
+    <div class="p">
+      <h3 data-i18n="p2.h">Cost swings, budgets don't</h3>
+      <p data-i18n="p2.b">Model prices move and usage spikes, but there's no way to fix tomorrow's inference cost today. Finance can't forecast a number that's never stable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE -->
+<section class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow" data-i18n="value.eyebrow">What DEX.DO does</div>
+    <h2 data-i18n="value.h">Two markets, one endpoint: buy access cheaper, then hedge its price.</h2>
+    <p data-i18n="value.sub">A decentralized order book matches you to the best seller for any model. A secondary market lets you do what no aggregator allows — turn a volatile AI bill into a fixed, plannable cost.</p>
+  </div>
+  <div class="cards">
+    <div class="card featured">
+      <div class="num" data-i18n="c1.num">01 · UNIQUE</div>
+      <h3 data-i18n="c1.h">Hedge the price of inference</h3>
+      <p data-i18n="c1.b">The only inference marketplace with a secondary layer. Lock the future price of a model, or trade AI-event outcomes — settled from the marketplace's own order book.</p>
+    </div>
+    <div class="card">
+      <div class="num">02</div>
+      <h3 data-i18n="c2.h">Best price, not a fixed markup</h3>
+      <p data-i18n="c2.b">An open order book routes you to the best available ask across sellers. Price discovery instead of a middleman's cut on every token.</p>
+    </div>
+    <div class="card">
+      <div class="num">03</div>
+      <h3 data-i18n="c3.h">One API, live in minutes</h3>
+      <p data-i18n="c3.b">OpenAI-compatible. Swap the base URL and your existing clients, agents and tools keep working — no rewrite.</p>
+    </div>
+    <div class="card">
+      <div class="num">04</div>
+      <h3 data-i18n="c4.h">Private by design</h3>
+      <p data-i18n="c4.b">Built on Dark Order: shielded balances, hidden order sizes, no front-running. No account wall, no custody — pay per token with stream-settlement that caps your downside.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how" class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow" data-i18n="how.eyebrow">How it works</div>
+    <h2 data-i18n="how.h">From base URL to a hedged inference budget.</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="n">01</div>
+      <h3 data-i18n="s1.h">Point your client</h3>
+      <p data-i18n="s1.b">Change one base URL. Claude Code, Cursor, your scripts and agents keep running exactly as they do today.</p>
+    </div>
+    <div class="step">
+      <div class="n">02</div>
+      <h3 data-i18n="s2.h">Buy access at the best price</h3>
+      <p data-i18n="s2.b">Match the cheapest seller for the model you need. Pay per tick as it streams — your downside is capped, no trust in the seller required.</p>
+    </div>
+    <div class="step">
+      <div class="n">03</div>
+      <h3 data-i18n="s3.h">Hedge your cost</h3>
+      <p data-i18n="s3.b">Fix the future price of a model on the secondary market, or take a position on AI events. Plan the budget instead of guessing it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SELLERS -->
+<section id="sellers" class="wrap">
+  <div class="sellers">
+    <div class="l">
+      <div class="eyebrow" data-i18n="sellers.eyebrow">For sellers</div>
+      <h2 data-i18n="sellers.h">Turn spare model capacity into revenue.</h2>
+      <p data-i18n="sellers.b">Have an API license or unused capacity? List a model once, get matched to real demand, and settle on-chain — paid as you serve, with no platform holding your payout.</p>
+    </div>
+    <a class="btn btn-primary" href="#access" data-role="seller" data-i18n="sellers.cta">Become a seller →</a>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="wrap">
+  <div class="trust">
+    <div class="t"><div class="lbl" data-i18n="t1.l">Infrastructure</div><p data-i18n-html data-i18n="t1.b">Built on <b>Dark Order</b> — on-chain order book, microsecond matching.</p></div>
+    <div class="t"><div class="lbl" data-i18n="t2.l">Network</div><p data-i18n-html data-i18n="t2.b">Runs on <b>Acki Nacki</b> — sub-second settlement.</p></div>
+    <div class="t"><div class="lbl" data-i18n="t3.l">Privacy</div><p data-i18n-html data-i18n="t3.b">Shielded prices and sizes. No front-running.</p></div>
+    <div class="t"><div class="lbl" data-i18n="t4.l">Custody</div><p data-i18n-html data-i18n="t4.b">Non-custodial. No sign-up wall, pay-as-you-go.</p></div>
+  </div>
+</section>
+
+<!-- ACCESS FORM -->
+<section id="access" class="form-sec">
+  <div class="wrap">
+    <div class="formcard">
+      <div id="formBody">
+        <div class="eyebrow" style="text-align:center" data-i18n="form.eyebrow">Early access</div>
+        <h2 style="margin-top:11px" data-i18n="form.h">Get on the list before launch</h2>
+        <p class="lead" data-i18n="form.lead">We're onboarding early buyers and sellers ahead of testnet. Tell us about your usage and we'll reach out with access.</p>
+        <form id="accessForm" novalidate>
+          <div class="fgrid">
+            <div class="field full">
+              <label for="email" data-i18n-html data-i18n="f.email">Work email <span class="req">*</span></label>
+              <input type="email" id="email" name="email" placeholder="you@company.com" data-i18n-ph="f.email.ph" required />
+            </div>
+            <div class="field">
+              <label for="company" data-i18n="f.company">Company / website</label>
+              <input type="text" id="company" name="company" placeholder="acme.ai" />
+            </div>
+            <div class="field">
+              <label for="role" data-i18n="f.role">I'm here as</label>
+              <select id="role" name="role">
+                <option value="Buyer" data-i18n="role.buyer">Buyer — I need inference</option>
+                <option value="Seller" data-i18n="role.seller">Seller — I have capacity/licenses</option>
+                <option value="Both" data-i18n="role.both">Both</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="spend" data-i18n="f.spend">Monthly AI spend</label>
+              <select id="spend" name="spend">
+                <option value="<$2k" data-i18n="spend.1">Under $2k</option>
+                <option value="$2k–$10k" data-i18n="spend.2">$2k – $10k</option>
+                <option value="$10k–$50k" data-i18n="spend.3">$10k – $50k</option>
+                <option value="$50k+" data-i18n="spend.4">$50k+</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="models" data-i18n="f.models">Models you use</label>
+              <input type="text" id="models" name="models" placeholder="gpt-5.5, claude-opus, deepseek…" />
+            </div>
+            <div class="field full">
+              <label for="msg" data-i18n="f.msg">Anything else? (optional)</label>
+              <textarea id="msg" name="msg" placeholder="" data-i18n-ph="f.msg.ph"></textarea>
+            </div>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center" data-i18n="btn.request">Request access</button>
+            <p class="form-note" data-i18n="form.note">No spam. We'll only use this to invite you to the testnet and a demo.</p>
+          </div>
+        </form>
+      </div>
+      <div class="form-ok" id="formOk" data-i18n="form.ok">Thanks — you're on the list. We'll be in touch shortly.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow" data-i18n="faq.eyebrow">FAQ</div>
+    <h2 data-i18n="faq.h">Straight answers.</h2>
+  </div>
+  <div class="cards">
+    <div class="card"><h3 data-i18n="q1.h">How is this cheaper than aggregators?</h3><p data-i18n="q1.b">An open order book matches you to the best available ask across sellers, instead of charging a fixed markup on every token. And you get something they don't offer at all — the ability to hedge the price.</p></div>
+    <div class="card"><h3 data-i18n="q2.h">Is reselling model access legal?</h3><p data-i18n="q2.b">The buyer-facing marketplace runs on supply whose resale is permitted by provider terms (open models, wholesale, resale-allowed APIs). It's the same category of service as any model router.</p></div>
+    <div class="card"><h3 data-i18n="q3.h">What about data and privacy?</h3><p data-i18n="q3.b">DEX.DO inherits Dark Order privacy — shielded prices and order sizes, no front-running — on an anonymous L1 with no account wall. Requests reach the provider directly; the chain only meters usage.</p></div>
+    <div class="card"><h3 data-i18n="q4.h">How is it different from other crypto inference markets?</h3><p data-i18n="q4.b">Most are spot-only. DEX.DO adds a secondary market so you can hedge your future cost — plus a private on-chain order book and a rewards program for early participants.</p></div>
+    <div class="card"><h3 data-i18n="q5.h">What do I actually pay for?</h3><p data-i18n="q5.b">Access to a model is sold in fixed ticks. You pay per tick as the work streams, so there's nothing to trust up front and your downside is capped.</p></div>
+    <div class="card"><h3 data-i18n="q6.h">When does it launch?</h3><p data-i18n="q6.b">The marketplace goes live on testnet first, with test tokens, ahead of mainnet. Join early access to get in with the first cohort.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-l">
+      <div class="brand" style="font-size:16px">DEX.DO</div>
+      <div class="foot-social">
+        <a href="https://t.me/ackinackinews" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://x.com/ackinackichain" target="_blank" rel="noopener">X</a>
+      </div>
+    </div>
+    <div class="foot-links">
+      <a href="#why" data-i18n="nav.why">Why</a>
+      <a href="#how" data-i18n="nav.how">How it works</a>
+      <a href="#sellers" data-i18n="nav.sellers">For sellers</a>
+      <a href="https://dexdo-season-lar4zz4ww-amirlat007-4493s-projects.vercel.app/" target="_blank" rel="noopener" data-i18n="btn.season">Season ↗</a>
+      <a href="#access" data-i18n="form.eyebrow">Early access</a>
+    </div>
+    <div class="foot-note" data-i18n="foot.note">© 2026 GOSH · DEX.DO · pre-launch · testnet on Acki Nacki</div>
+  </div>
+</footer>
+
+<script>
+  /* ---- CONFIG ---- */
+  const CONTACT_EMAIL = "hello@dex.do";   // ← change to your inbox (mailto fallback)
+  const FORM_ENDPOINT = "";               // ← optional: paste a Formspree / Tally / your-own POST URL
+
+  /* ---- i18n ---- */
+  const DICT = {
+    en: {
+      "brand.tag":"AI token marketplace","nav.why":"Why","nav.how":"How it works","nav.sellers":"For sellers","nav.faq":"FAQ",
+      "btn.season":"Season ↗","btn.access":"Get early access","btn.access2":"Get early access","btn.demo":"Book a demo",
+      "hero.eyebrow":"Private · OpenAI-compatible · pre-launch",
+      "hero.h":"Buy AI inference at the best price — and <span style='color:var(--accent)'>hedge what it costs</span>.",
+      "hero.sub":"DEX.DO is a token marketplace for AI model access, built on Dark Order infrastructure. Route to the best seller through one OpenAI-compatible API, pay per token as you go, and lock in your future inference cost on the secondary market.",
+      "ob.price":"Price · SHELL/tick","ob.size":"Size · ticks","ob.spread":"spread 20","ob.mid":"mid",
+      "ob.foot":"Secondary: hedge <b>CODEX price → T+30d</b> · settled from this book",
+      "strip.lbl":"Model coverage","strip.more":"and more",
+      "problem.eyebrow":"The problem","problem.h":"Your AI bill is unpredictable, and the middleman keeps the margin.",
+      "p1.h":"Aggregators don't make it cheaper","p1.b":"Centralized routers add a fixed markup on top of provider prices. Convenient — but you pay for it on every token, with no price you can plan around.",
+      "p2.h":"Cost swings, budgets don't","p2.b":"Model prices move and usage spikes, but there's no way to fix tomorrow's inference cost today. Finance can't forecast a number that's never stable.",
+      "value.eyebrow":"What DEX.DO does","value.h":"Two markets, one endpoint: buy access cheaper, then hedge its price.",
+      "value.sub":"A decentralized order book matches you to the best seller for any model. A secondary market lets you do what no aggregator allows — turn a volatile AI bill into a fixed, plannable cost.",
+      "c1.num":"01 · UNIQUE","c1.h":"Hedge the price of inference","c1.b":"The only inference marketplace with a secondary layer. Lock the future price of a model, or trade AI-event outcomes — settled from the marketplace's own order book.",
+      "c2.h":"Best price, not a fixed markup","c2.b":"An open order book routes you to the best available ask across sellers. Price discovery instead of a middleman's cut on every token.",
+      "c3.h":"One API, live in minutes","c3.b":"OpenAI-compatible. Swap the base URL and your existing clients, agents and tools keep working — no rewrite.",
+      "c4.h":"Private by design","c4.b":"Built on Dark Order: shielded balances, hidden order sizes, no front-running. No account wall, no custody — pay per token with stream-settlement that caps your downside.",
+      "how.eyebrow":"How it works","how.h":"From base URL to a hedged inference budget.",
+      "s1.h":"Point your client","s1.b":"Change one base URL. Claude Code, Cursor, your scripts and agents keep running exactly as they do today.",
+      "s2.h":"Buy access at the best price","s2.b":"Match the cheapest seller for the model you need. Pay per tick as it streams — your downside is capped, no trust in the seller required.",
+      "s3.h":"Hedge your cost","s3.b":"Fix the future price of a model on the secondary market, or take a position on AI events. Plan the budget instead of guessing it.",
+      "sellers.eyebrow":"For sellers","sellers.h":"Turn spare model capacity into revenue.","sellers.b":"Have an API license or unused capacity? List a model once, get matched to real demand, and settle on-chain — paid as you serve, with no platform holding your payout.","sellers.cta":"Become a seller →",
+      "t1.l":"Infrastructure","t1.b":"Built on <b>Dark Order</b> — on-chain order book, microsecond matching.",
+      "t2.l":"Network","t2.b":"Runs on <b>Acki Nacki</b> — sub-second settlement.",
+      "t3.l":"Privacy","t3.b":"Shielded prices and sizes. No front-running.",
+      "t4.l":"Custody","t4.b":"Non-custodial. No sign-up wall, pay-as-you-go.",
+      "form.eyebrow":"Early access","form.h":"Get on the list before launch","form.lead":"We're onboarding early buyers and sellers ahead of testnet. Tell us about your usage and we'll reach out with access.",
+      "f.email":"Work email <span class='req'>*</span>","f.email.ph":"you@company.com","f.company":"Company / website","f.role":"I'm here as",
+      "role.buyer":"Buyer — I need inference","role.seller":"Seller — I have capacity/licenses","role.both":"Both",
+      "f.spend":"Monthly AI spend","spend.1":"Under $2k","spend.2":"$2k – $10k","spend.3":"$10k – $50k","spend.4":"$50k+",
+      "f.models":"Models you use","f.msg":"Anything else? (optional)","f.msg.ph":"Your use case, volume, or what would make you switch.",
+      "btn.request":"Request access","form.note":"No spam. We'll only use this to invite you to the testnet and a demo.","form.ok":"Thanks — you're on the list. We'll be in touch shortly.",
+      "faq.eyebrow":"FAQ","faq.h":"Straight answers.",
+      "q1.h":"How is this cheaper than aggregators?","q1.b":"An open order book matches you to the best available ask across sellers, instead of charging a fixed markup on every token. And you get something they don't offer at all — the ability to hedge the price.",
+      "q2.h":"Is reselling model access legal?","q2.b":"The buyer-facing marketplace runs on supply whose resale is permitted by provider terms (open models, wholesale, resale-allowed APIs). It's the same category of service as any model router.",
+      "q3.h":"What about data and privacy?","q3.b":"DEX.DO inherits Dark Order privacy — shielded prices and order sizes, no front-running — on an anonymous L1 with no account wall. Requests reach the provider directly; the chain only meters usage.",
+      "q4.h":"How is it different from other crypto inference markets?","q4.b":"Most are spot-only. DEX.DO adds a secondary market so you can hedge your future cost — plus a private on-chain order book and a rewards program for early participants.",
+      "q5.h":"What do I actually pay for?","q5.b":"Access to a model is sold in fixed ticks. You pay per tick as the work streams, so there's nothing to trust up front and your downside is capped.",
+      "q6.h":"When does it launch?","q6.b":"The marketplace goes live on testnet first, with test tokens, ahead of mainnet. Join early access to get in with the first cohort.",
+      "foot.note":"© 2026 GOSH · DEX.DO · pre-launch · testnet on Acki Nacki"
+    },
+    ru: {
+      "brand.tag":"маркетплейс AI-токенов","nav.why":"Зачем","nav.how":"Как работает","nav.sellers":"Продавцам","nav.faq":"FAQ",
+      "btn.season":"Season ↗","btn.access":"Ранний доступ","btn.access2":"Получить ранний доступ","btn.demo":"Заказать демо",
+      "hero.eyebrow":"Приватно · OpenAI-совместимо · pre-launch",
+      "hero.h":"Покупай AI-инференс по лучшей цене — и <span style='color:var(--accent)'>хеджируй его стоимость</span>.",
+      "hero.sub":"DEX.DO — маркетплейс токенов на доступ к AI-моделям на инфраструктуре Dark Order. Один OpenAI-совместимый API подбирает лучшего продавца, платишь по мере использования, а будущую стоимость инференса можно зафиксировать на вторичном рынке.",
+      "ob.price":"Цена · SHELL/тик","ob.size":"Объём · тики","ob.spread":"спред 20","ob.mid":"среднее",
+      "ob.foot":"Вторичка: хедж <b>цены CODEX → T+30д</b> · сеттл из этого стакана",
+      "strip.lbl":"Покрытие моделей","strip.more":"и другие",
+      "problem.eyebrow":"Проблема","problem.h":"Счёт за AI непредсказуем, а маржу забирает посредник.",
+      "p1.h":"Агрегаторы не делают дешевле","p1.b":"Централизованные роутеры берут фиксированную наценку поверх цен провайдеров. Удобно — но платишь за это на каждом токене, без цены, которую можно планировать.",
+      "p2.h":"Цена скачет, бюджет — нет","p2.b":"Цены моделей меняются, потребление прыгает, но зафиксировать завтрашнюю стоимость инференса сегодня нечем. Финансам не спрогнозировать нестабильное число.",
+      "value.eyebrow":"Что делает DEX.DO","value.h":"Два рынка, один эндпоинт: купи доступ дешевле и захеджируй цену.",
+      "value.sub":"Децентрализованный order book подбирает лучшего продавца под любую модель. А вторичный рынок даёт то, чего нет ни у одного агрегатора — превратить плавающий счёт за AI в фиксированную, планируемую статью бюджета.",
+      "c1.num":"01 · УНИКАЛЬНО","c1.h":"Хедж цены инференса","c1.b":"Единственный маркетплейс инференса со вторичным слоем. Зафиксируй будущую цену модели или торгуй исходами ИИ-событий — сеттл из собственного order book маркетплейса.",
+      "c2.h":"Лучшая цена, а не фикс-наценка","c2.b":"Открытый order book ведёт к лучшему доступному ask среди продавцов. Прайс-дискавери вместо доли посредника на каждом токене.",
+      "c3.h":"Один API, запуск за минуты","c3.b":"OpenAI-совместимо. Меняешь base URL — клиенты, агенты и инструменты работают как раньше, без переписывания.",
+      "c4.h":"Приватность по умолчанию","c4.b":"На базе Dark Order: скрытые балансы и размеры заявок, без фронт-раннинга. Без аккаунт-стены и кастодиала — платишь по токенам, stream-settlement ограничивает потери.",
+      "how.eyebrow":"Как это работает","how.h":"От base URL до захеджированного бюджета на инференс.",
+      "s1.h":"Подключи клиент","s1.b":"Меняешь один base URL. Claude Code, Cursor, твои скрипты и агенты работают ровно как сегодня.",
+      "s2.h":"Купи доступ по лучшей цене","s2.b":"Матч с самым дешёвым продавцом нужной модели. Платишь по тикам по мере стрима — потери ограничены, доверять продавцу заранее не нужно.",
+      "s3.h":"Захеджируй стоимость","s3.b":"Зафиксируй будущую цену модели на вторичном рынке или возьми позицию на ИИ-события. Планируй бюджет, а не угадывай.",
+      "sellers.eyebrow":"Продавцам","sellers.h":"Преврати свободную ёмкость моделей в выручку.","sellers.b":"Есть API-лицензия или неиспользуемая ёмкость? Выстави модель один раз, получай матчи с реальным спросом и сеттль on-chain — оплата по мере выдачи, без удержания выплат площадкой.","sellers.cta":"Стать продавцом →",
+      "t1.l":"Инфраструктура","t1.b":"На базе <b>Dark Order</b> — on-chain order book, микросекундный матчинг.",
+      "t2.l":"Сеть","t2.b":"Работает на <b>Acki Nacki</b> — сеттл меньше секунды.",
+      "t3.l":"Приватность","t3.b":"Скрытые цены и размеры. Без фронт-раннинга.",
+      "t4.l":"Кастодиал","t4.b":"Non-custodial. Без аккаунт-стены, pay-as-you-go.",
+      "form.eyebrow":"Ранний доступ","form.h":"Попади в список до запуска","form.lead":"Подключаем ранних покупателей и продавцов до тестнета. Расскажи про своё потребление — и мы свяжемся с доступом.",
+      "f.email":"Рабочий email <span class='req'>*</span>","f.email.ph":"you@company.com","f.company":"Компания / сайт","f.role":"Я здесь как",
+      "role.buyer":"Покупатель — нужен инференс","role.seller":"Продавец — есть ёмкость/лицензии","role.both":"И то, и другое",
+      "f.spend":"Месячный расход на AI","spend.1":"До $2k","spend.2":"$2k – $10k","spend.3":"$10k – $50k","spend.4":"$50k+",
+      "f.models":"Какие модели используешь","f.msg":"Что-то ещё? (необязательно)","f.msg.ph":"Твой кейс, объём или что заставит перейти.",
+      "btn.request":"Запросить доступ","form.note":"Без спама. Используем только чтобы пригласить в тестнет и на демо.","form.ok":"Спасибо — ты в списке. Свяжемся в ближайшее время.",
+      "faq.eyebrow":"FAQ","faq.h":"Прямые ответы.",
+      "q1.h":"Чем это дешевле агрегаторов?","q1.b":"Открытый order book ведёт к лучшему доступному ask среди продавцов вместо фиксированной наценки на каждый токен. Плюс то, чего у них нет вовсе — возможность захеджировать цену.",
+      "q2.h":"Перепродажа доступа к моделям легальна?","q2.b":"Витрина для покупателей работает на supply, чья перепродажа разрешена условиями провайдеров (открытые модели, опт, resale-разрешённые API). Это та же категория сервиса, что и любой роутер моделей.",
+      "q3.h":"Что с данными и приватностью?","q3.b":"DEX.DO наследует приватность Dark Order — скрытые цены и размеры заявок, без фронт-раннинга — на анонимном L1 без аккаунт-стены. Запросы идут к провайдеру напрямую; цепь только считает потребление.",
+      "q4.h":"Чем отличается от других крипто-рынков инференса?","q4.b":"Большинство — только спот. DEX.DO добавляет вторичный рынок, чтобы хеджировать будущую стоимость — плюс приватный on-chain order book и программа наград для ранних участников.",
+      "q5.h":"За что я плачу?","q5.b":"Доступ к модели продаётся фиксированными тиками. Платишь по тикам по мере стрима — заранее доверять нечему, потери ограничены.",
+      "q6.h":"Когда запуск?","q6.b":"Маркетплейс сначала идёт в тестнет с тестовыми токенами, перед mainnet. Подключайся к раннему доступу, чтобы попасть в первую когорту.",
+      "foot.note":"© 2026 GOSH · DEX.DO · pre-launch · тестнет на Acki Nacki"
+    }
+  };
+
+  function applyLang(lang){
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const v = DICT[lang][el.getAttribute('data-i18n')];
+      if(v==null) return;
+      if(el.hasAttribute('data-i18n-html')) el.innerHTML = v; else el.textContent = v;
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+      const v = DICT[lang][el.getAttribute('data-i18n-ph')]; if(v!=null) el.placeholder = v;
+    });
+    document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+  }
+  document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>applyLang(b.dataset.lang)));
+  (function(){
+    let initial='en';
+    const q=new URLSearchParams(location.search).get('lang');
+    if(q==='ru'||q==='en') initial=q;
+    else if((navigator.language||'').toLowerCase().startsWith('ru')) initial='ru';
+    applyLang(initial);
+  })();
+
+  /* ---- pre-select role from CTA ---- */
+  document.querySelectorAll('[data-role]').forEach(b=>b.addEventListener('click',()=>{
+    if(b.getAttribute('data-role')==='seller') document.getElementById('role').value='Seller';
+  }));
+
+  /* ---- form submit ---- */
+  const form=document.getElementById('accessForm');
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    const email=document.getElementById('email');
+    if(!email.value || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)){
+      email.focus(); email.style.borderColor='var(--ask)'; return;
+    }
+    const data={email:email.value, company:val('company'), role:val('role'), spend:val('spend'),
+      models:val('models'), message:val('msg'), source:'dex.do landing', ts:new Date().toISOString()};
+    let sent=false;
+    if(FORM_ENDPOINT){
+      try{ const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); sent=r.ok; }
+      catch(_){ sent=false; }
+    }
+    if(!sent && !FORM_ENDPOINT){
+      const subj=encodeURIComponent('DEX.DO early access — '+data.role+' — '+(data.company||data.email));
+      const body=encodeURIComponent('Email: '+data.email+'\nCompany: '+data.company+'\nRole: '+data.role+'\nMonthly AI spend: '+data.spend+'\nModels: '+data.models+'\nMessage: '+data.message);
+      window.location.href='mailto:'+CONTACT_EMAIL+'?subject='+subj+'&body='+body;
+    }
+    document.getElementById('formBody').style.display='none';
+    document.getElementById('formOk').style.display='block';
+  });
+  function val(id){return (document.getElementById(id).value||'').trim();}
+</script>
+</body>
+</html>
