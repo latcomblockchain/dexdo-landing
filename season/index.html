@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEX.DO — Season 1</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --bg:#000000;
+    --surf:#0e0e0f;
+    --surf-2:#161617;
+    --surf-h:#1e1e20;
+    --line:rgba(255,255,255,.08);
+    --line-2:rgba(255,255,255,.15);
+    --tx:#f6f7f8;
+    --tx-2:#9a9ea3;
+    --tx-3:#62646a;
+    --acc:#ffffff;
+    --acc-soft:rgba(255,255,255,.10);
+    --red:#ff1916;
+    --red-soft:rgba(255,25,22,.14);
+    --crim:#ef5b6e;
+    --ui:'Inconsolata','JetBrains Mono',ui-monospace,monospace;
+    --mono:'Inconsolata','JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--tx);font-family:var(--ui);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;position:relative;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1100px 560px at 78% -14%,rgba(255,255,255,.035),transparent 60%),radial-gradient(680px 520px at -6% 112%,rgba(255,25,22,.09),transparent 55%)}
+  body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:60px 60px;-webkit-mask-image:radial-gradient(circle at 50% 24%,#000,transparent 76%);mask-image:radial-gradient(circle at 50% 24%,#000,transparent 76%)}
+
+  .screen{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+  .hidden{display:none!important}
+  .wrap{width:100%;max-width:1180px;margin:0 auto;padding:24px}
+  .center{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+
+  /* top bar */
+  .nav{display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:21px;letter-spacing:-.02em;cursor:pointer}
+  .logo .dot{width:8px;height:8px;border-radius:2px;background:var(--red);box-shadow:0 0 12px rgba(255,25,22,.55)}
+  .logo b{color:var(--tx)}.logo i{color:var(--tx-2);font-style:normal}
+  .navtag{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--tx-3);text-transform:uppercase;border:1px solid var(--line);border-radius:5px;padding:3px 8px;margin-left:4px}
+  .nav-r{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--tx-2)}
+  .lang-dd{position:relative;display:inline-block}
+  .lang-btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;color:var(--tx-2);cursor:pointer;background:var(--surf);border:1px solid var(--line-2);border-radius:5px;padding:4px 9px;letter-spacing:.04em}
+  .lang-btn:hover{color:var(--tx)}
+  .lang-btn .chev{font-size:9px;color:var(--tx-3)}
+  .lang-dd.open .lang-btn{color:var(--tx)}
+  .lang-menu{position:absolute;right:0;top:calc(100% + 6px);min-width:160px;background:var(--surf);border:1px solid var(--line-2);border-radius:9px;padding:5px;display:none;flex-direction:column;z-index:50;box-shadow:0 14px 34px rgba(0,0,0,.55)}
+  .lang-dd.open .lang-menu{display:flex}
+  .lang-item{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;border-radius:6px;padding:7px 9px;font-family:var(--mono);font-size:12.5px;color:var(--tx-2);cursor:pointer}
+  .lang-item:hover{background:var(--surf-h);color:var(--tx)}
+  .lang-item.on{color:var(--tx);background:var(--surf-2)}
+  .flag{width:17px;height:12px;border-radius:2.5px;overflow:hidden;border:1px solid rgba(255,255,255,.14);display:inline-flex;flex:none;box-sizing:border-box}
+  .flag svg{width:100%;height:100%;display:block}
+  .wallet-chip{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-family:var(--mono);font-size:12.5px;color:var(--tx)}
+  .wallet-chip .ic{width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#e7e9ec,#6b7178)}
+  .wallet-chip .cp{color:var(--tx-3);cursor:pointer;font-size:13px}
+  .wallet-chip .cp:hover{color:var(--acc)}
+  .logout{color:var(--tx-2);cursor:pointer;font-weight:500}
+  .logout:hover{color:var(--tx)}
+
+  /* hero */
+  .hero{max-width:880px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--tx-2);text-transform:uppercase;margin-bottom:22px}
+  h1.big{font-weight:800;font-size:clamp(34px,6.4vw,68px);line-height:1.02;letter-spacing:-.01em;text-transform:uppercase}
+  h1.big .dim{color:var(--tx-2)}
+  .lead{color:var(--tx-2);font-size:clamp(15px,1.8vw,18.5px);max-width:56ch;margin-top:24px;font-weight:500}
+  .cta-row{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
+
+  .btn{border:none;border-radius:6px;padding:15px 26px;font-family:var(--ui);font-weight:700;font-size:15.5px;cursor:pointer;transition:transform .12s,background .15s,border-color .15s,color .15s;display:inline-flex;align-items:center;gap:9px}
+  .btn-pri{background:var(--tx);color:#0a0a0a}
+  .btn-pri:hover{background:#fff;transform:translateY(-1px)}
+  .btn-pri:active{transform:translateY(0)}
+  .btn-sec{background:transparent;color:var(--tx-2);border:1px solid var(--line-2)}
+  .btn-sec:hover{color:var(--tx);background:rgba(255,255,255,.03)}
+  .btn-acc{background:var(--red);color:#fff}
+  .btn-acc:hover{background:#ff3327;transform:translateY(-1px)}
+  .btn-block{width:100%;justify-content:center}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+  .flow{display:flex;flex-wrap:wrap;gap:10px;margin-top:56px;max-width:760px}
+  .step{flex:1;min-width:190px;border:1px solid var(--line);border-radius:13px;padding:18px 20px;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent)}
+  .step .n{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.1em;font-weight:700}
+  .step .t{font-weight:700;font-size:16px;margin-top:10px}
+  .step .d{font-size:13px;color:var(--tx-3);margin-top:6px;line-height:1.5}
+
+  /* auth */
+  .card{background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:30px}
+  .auth{width:100%;max-width:560px}
+  .auth h2{font-weight:800;font-size:23px;letter-spacing:.01em;text-transform:uppercase}
+  .auth .csub{color:var(--tx-2);font-size:14px;margin-top:8px;line-height:1.55}
+  .opt{display:flex;align-items:center;gap:16px;width:100%;text-align:left;background:var(--surf-2);border:1px solid var(--line);border-radius:13px;padding:18px 20px;margin-top:14px;cursor:pointer;transition:.15s;color:var(--tx);font-family:var(--ui)}
+  .opt:hover{border-color:var(--line-2);background:var(--surf-h)}
+  .opt .oi{width:40px;height:40px;border-radius:10px;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;font-size:18px;color:var(--tx-2)}
+  .opt .ocol{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+  .opt .ot{display:block;font-weight:700;font-size:15.5px;color:var(--tx);line-height:1.25}
+  .opt .od{display:block;font-size:12.5px;color:var(--tx-3);line-height:1.35}
+  .opt .arr{margin-left:auto;color:var(--tx-3);font-size:18px;flex:none}
+  .back{display:inline-flex;align-items:center;gap:7px;color:var(--tx-3);font-size:13px;cursor:pointer;margin-top:22px;font-family:var(--mono)}
+  .back:hover{color:var(--tx-2)}
+
+  .warn{background:rgba(239,91,110,.08);border:1px solid rgba(239,91,110,.22);border-radius:11px;padding:13px 15px;font-size:13px;color:#f0a6af;line-height:1.5;margin-top:18px}
+  .warn b{color:#f4c2c8}
+
+  .seedgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}
+  @media(max-width:560px){.seedgrid{grid-template-columns:repeat(2,1fr)}}
+  .word{background:var(--surf-2);border:1px solid var(--line);border-radius:9px;padding:11px 12px;font-family:var(--mono);font-size:13px;display:flex;gap:8px;align-items:baseline}
+  .word .wn{color:var(--tx-3);font-size:11px;min-width:16px}
+  .word .ww{color:var(--tx)}
+
+  label.fl{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.07em;color:var(--tx-2);text-transform:uppercase;margin:0 0 8px}
+  .field{width:100%;background:var(--surf-2);border:1px solid var(--line-2);border-radius:10px;padding:13px 14px;color:var(--tx);font-family:var(--mono);font-size:14px;outline:none;transition:.15s;resize:vertical}
+  .field::placeholder{color:var(--tx-3)}
+  .field:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-soft)}
+  .verify-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+  .vcell label{font-family:var(--mono);font-size:12px;color:var(--tx-3);margin-bottom:6px;display:block}
+  .err{color:var(--crim);font-size:12.5px;margin-top:10px;font-family:var(--mono);min-height:1px}
+  .mt{margin-top:18px}
+  .mt-s{margin-top:12px}
+
+  /* confirm */
+  .okwrap{text-align:center}
+  .okcirc{width:64px;height:64px;border-radius:50%;background:var(--acc-soft);border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:30px;color:var(--acc)}
+  .addrbox{background:var(--surf-2);border:1px solid var(--line);border-radius:11px;padding:14px;font-family:var(--mono);font-size:13.5px;color:var(--tx);word-break:break-all;margin-top:18px;text-align:left}
+  .addrbox .k{display:block;font-size:10.5px;color:var(--tx-3);letter-spacing:.08em;margin-bottom:6px;text-transform:uppercase}
+
+  /* cabinet */
+  .cab-head{border-bottom:1px solid var(--line)}
+  .cabtitle{margin-top:38px}
+  .cabtitle h2{font-weight:800;font-size:29px;letter-spacing:.01em;text-transform:uppercase}
+  .cabtitle p{color:var(--tx-2);font-size:14.5px;margin-top:6px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
+  @media(max-width:640px){.stats{grid-template-columns:1fr}}
+  .stat{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+  .stat .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--tx-3);text-transform:uppercase}
+  .stat .v{font-weight:800;font-size:30px;margin-top:8px}
+  .stat .v.acc{color:var(--red)}
+
+  .cabgrid{display:grid;grid-template-columns:340px minmax(0,1fr);gap:18px;margin-top:18px;align-items:start}
+  @media(max-width:840px){.cabgrid{grid-template-columns:1fr}}
+
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:24px}
+  .panel h3{font-weight:700;font-size:17px}
+  .panel .psub{color:var(--tx-3);font-size:12.5px;margin-top:5px;line-height:1.5}
+  .refpeople{width:54px;height:54px;border-radius:13px;background:var(--surf-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:24px;margin:18px 0 4px}
+  .linkchip{display:flex;gap:8px;margin-top:16px}
+  .linkchip input{flex:1;font-size:12px}
+  .cpbtn{flex:none;background:var(--surf-2);border:1px solid var(--line-2);color:var(--tx-2);border-radius:10px;padding:0 16px;font-family:var(--mono);font-size:12px;cursor:pointer;transition:.15s;white-space:nowrap}
+  .cpbtn:hover{border-color:var(--acc);color:var(--acc)}
+  .cpbtn.ok{color:var(--acc);border-color:var(--acc)}
+
+  .reftable-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .reftable-h h3{font-weight:700;font-size:17px}
+  .live{font-family:var(--mono);font-size:10.5px;color:var(--red);display:flex;align-items:center;gap:6px;letter-spacing:.12em;text-transform:uppercase}
+  .live .d{width:6px;height:6px;border-radius:50%;background:var(--red);animation:blink 1.7s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+  .rt{display:grid;grid-template-columns:1.4fr 1fr .9fr .9fr;gap:0}
+  .rt .rhead{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--tx-3);text-transform:uppercase;padding:0 18px 12px}
+  .rt .rhead.r{text-align:right}
+  .rrow{grid-column:1 / -1;display:grid;grid-template-columns:1.4fr 1fr .9fr .9fr;background:var(--surf-2);border-radius:12px;margin-bottom:8px;align-items:center}
+  .rrow > div{padding:15px 18px;font-family:var(--mono);font-size:13px;color:var(--tx-2)}
+  .rrow .date{color:var(--tx)}
+  .rrow .raddr{color:var(--tx)}
+  .rrow .act{text-align:right}
+  .rrow .rew{text-align:right;color:var(--red);font-weight:700}
+  .empty{grid-column:1 / -1;text-align:center;color:var(--tx-3);font-size:13px;padding:30px 0;background:var(--surf-2);border-radius:12px}
+  @media(max-width:560px){
+    .rt .rhead{display:none}
+    .rrow{grid-template-columns:1fr 1fr;row-gap:0}
+    .rrow .act,.rrow .rew{text-align:left}
+  }
+
+  footer{margin-top:46px;border-top:1px solid var(--line);padding:20px 0 40px}
+  .foot{font-family:var(--mono);font-size:11px;color:var(--tx-3);line-height:1.6;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+  .foot b{color:var(--tx-2)}
+  .reset{font-family:var(--mono);font-size:10.5px;color:var(--tx-3);background:none;border:1px solid var(--line);border-radius:6px;padding:5px 9px;cursor:pointer}
+  .reset:hover{color:var(--crim);border-color:rgba(239,91,110,.4)}
+
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .fade{animation:fade .45s ease both}
+  .d1{animation-delay:.05s}.d2{animation-delay:.12s}.d3{animation-delay:.2s}.d4{animation-delay:.28s}
+
+  /* landing sections: actions + rules */
+  .sect{padding:34px 0 10px;border-top:1px solid var(--line);margin-top:10px}
+  .sec-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:10px;font-weight:600}
+  .sec-title{font-weight:800;font-size:clamp(24px,3.6vw,36px);letter-spacing:.01em;text-transform:uppercase;line-height:1.04}
+  .sec-sub{color:var(--tx-2);font-size:14.5px;max-width:66ch;margin-top:14px;line-height:1.55}
+  .acts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:24px}
+  @media(max-width:680px){.acts{grid-template-columns:1fr}}
+  .rules{margin-top:22px;display:flex;flex-direction:column;max-width:82ch}
+  .rule{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
+  .rule:last-child{border-bottom:none}
+  .rule .mk{flex:none;width:22px;height:22px;border-radius:5px;background:var(--red-soft);color:var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;margin-top:1px}
+  .rule .rx{font-size:14px;color:var(--tx);line-height:1.5}
+  .rule .rx span{color:var(--tx-3)}
+  .sect-cta{margin:30px 0 8px}
+</style>
+</head>
+<body>
+
+<!-- ============ LANDING ============ -->
+<section class="screen" id="scr-landing">
+  <div class="wrap">
+    <div class="nav fade">
+      <div class="logo" onclick="go('scr-landing')"><span class="dot"></span><b>DEX</b><i>.DO</i><span class="navtag">Dark&nbsp;Order</span></div>
+      <div class="nav-r"><div class="lang-dd"></div></div>
+    </div>
+  </div>
+  <div class="center">
+    <div class="wrap">
+      <div class="hero">
+        <div class="eyebrow fade d1">DEX.DO · Dark Order · Season 1</div>
+        <h1 class="big fade d2" data-i18n="hero_h1">Бери ИИ раньше рынка<br><span class="dim">Забери свою долю</span></h1>
+        <p class="lead fade d3" data-i18n="hero_lead">Первый сезон Dark Order идёт на Acki Nacki Shellnet. Подключи кошелёк, покупай и продавай доступ к ИИ-моделям, реально потребляй инференс, приглашай друзей — активность копится в points и конвертируется при claim в конце сезона.</p>
+        <div class="cta-row fade d4">
+          <button class="btn btn-acc" onclick="go('scr-connect')" data-i18n="btn_im_in">Я в деле →</button>
+          <button class="btn btn-sec" onclick="document.getElementById('how').scrollIntoView()" data-i18n="btn_how">Как это работает</button>
+        </div>
+        <div class="flow fade d4" id="how">
+          <div class="step"><div class="n">01</div><div class="t" data-i18n="step1_t">Подключи кошелёк</div><div class="d" data-i18n="step1_d">Acki Nacki Wallet — некастодиальный, на seed-фразе. Создай новый или импортируй.</div></div>
+          <div class="step"><div class="n">02</div><div class="t" data-i18n="step2_t">Используй и приглашай</div><div class="d" data-i18n="step2_d">Доступ к моделям, реальное потребление, вторичный рынок, рефералы — всё капает в points.</div></div>
+          <div class="step"><div class="n">03</div><div class="t" data-i18n="step3_t">Claim</div><div class="d" data-i18n="step3_d">В конце сезона раскрываешь активность и забираешь награду.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="wrap sect">
+    <div class="sec-eyebrow">Season 1 · Shellnet</div>
+    <h2 class="sec-title" data-i18n="act_title">Что приносит points</h2>
+    <p class="sec-sub" data-i18n="act_sub">Полный список действий, за которые начисляются points. Точные веса начисления закрыты — это защита от накрутки. Но за что и по каким правилам начисляем — открыто.</p>
+    <div class="acts">
+      <div class="step"><div class="n">01</div><div class="t" data-i18n="a1_t">Доступ к моделям</div><div class="d" data-i18n="a1_d">Покупай и продавай доступ к ИИ-моделям в ордербуке — размещай заявки и закрывай сделки. Учитываются разные модели.</div></div>
+      <div class="step"><div class="n">02</div><div class="t" data-i18n="a2_t">Реальное потребление</div><div class="d" data-i18n="a2_d">Реально потребляй инференс, который купил. Это самый весомый сигнал — его труднее всего подделать.</div></div>
+      <div class="step"><div class="n">03</div><div class="t" data-i18n="a3_t">Вторичный рынок и хедж</div><div class="d" data-i18n="a3_d">Бери позицию на цену модели или на ИИ-события — и хеджируй свою стоимость.</div></div>
+      <div class="step"><div class="n">04</div><div class="t" data-i18n="a4_t">Рефералы</div><div class="d" data-i18n="a4_d">Приглашай по своей ссылке. Реферал засчитан, когда подключился и сделал первую активность.</div></div>
+    </div>
+    <p class="sec-sub" style="font-size:13px;margin-top:14px" data-i18n="act_sub2">Объём на Shellnet не считается — токены тестовые. На mainnet добавятся объём потребления и market-making.</p>
+  </div>
+
+  <!-- RULES -->
+  <div class="wrap sect">
+    <div class="sec-eyebrow" data-i18n="rules_eyebrow">Правила</div>
+    <h2 class="sec-title" data-i18n="rules_title">Правила сезона</h2>
+    <div class="rules">
+      <div class="rule"><span class="mk">✓</span><span class="rx" data-i18n="rule1"><b>Сезон 1 идёт на Shellnet (тестовая сеть).</b> <span>Points — провизорные.</span></span></div>
+      <div class="rule"><span class="mk">✓</span><span class="rx" data-i18n="rule2"><b>Награда — в токене NACKL.</b> <span>При выходе на mainnet points конвертируются в NACKL-аллокацию.</span></span></div>
+      <div class="rule"><span class="mk">✓</span><span class="rx" data-i18n="rule3"><b>Чтобы забрать награду — claim в конце сезона.</b> <span>Выводишь средства на публичный кошелёк и подтверждаешь владение.</span></span></div>
+      <div class="rule"><span class="mk">✓</span><span class="rx" data-i18n="rule4"><b>Точные веса начисления закрыты.</b> <span>Это защита от накрутки. Список действий и правила сезона — публичны.</span></span></div>
+      <div class="rule"><span class="mk">✓</span><span class="rx" data-i18n="rule5"><b>Правила не меняются задним числом</b> <span>в минус участникам.</span></span></div>
+      <div class="rule"><span class="mk">✓</span><span class="rx" data-i18n="rule6"><b>Накрутка отсекается.</b> <span>Сделки сам с собой и мульти-аккаунты не засчитываются — проверяем при claim.</span></span></div>
+      <div class="rule"><span class="mk">✓</span><span class="rx" data-i18n="rule7"><b>На действия есть лимиты</b> <span>— против ботов.</span></span></div>
+    </div>
+    <div class="sect-cta"><button class="btn btn-acc" onclick="go('scr-connect')" data-i18n="btn_im_in">Я в деле →</button></div>
+  </div>
+
+</section>
+
+<!-- ============ CONNECT ============ -->
+<section class="screen hidden" id="scr-connect">
+  <div class="wrap"><div class="nav"><div class="logo" onclick="go('scr-landing')"><span class="dot"></span><b>DEX</b><i>.DO</i></div><div class="nav-r"><div class="lang-dd"></div></div></div></div>
+  <div class="center">
+    <div class="auth card fade">
+      <h2 data-i18n="connect_title">Подключить кошелёк</h2>
+      <p class="csub" data-i18n="connect_sub">Сезон 1 идёт на Acki Nacki Shellnet. Используется кошелёк Acki Nacki — некастодиальный, на seed-фразе. Регистрация не нужна.</p>
+      <button class="opt" onclick="startCreate()">
+        <span class="oi">✦</span>
+        <span class="ocol"><span class="ot" data-i18n="opt_create_t">Создать новый кошелёк</span><span class="od" data-i18n="opt_create_d">Сгенерируем 24-словную seed-фразу</span></span>
+        <span class="arr">→</span>
+      </button>
+      <button class="opt" onclick="go('scr-import')">
+        <span class="oi">↻</span>
+        <span class="ocol"><span class="ot" data-i18n="opt_import_t">Импортировать seed-фразу</span><span class="od" data-i18n="opt_import_d">Восстановить существующий кошелёк</span></span>
+        <span class="arr">→</span>
+      </button>
+      <div class="back" onclick="go('scr-landing')" data-i18n="back_link">← назад</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CREATE ============ -->
+<section class="screen hidden" id="scr-create">
+  <div class="wrap"><div class="nav"><div class="logo" onclick="go('scr-landing')"><span class="dot"></span><b>DEX</b><i>.DO</i></div><div class="nav-r"><div class="lang-dd"></div></div></div></div>
+  <div class="center">
+    <div class="auth card fade">
+
+      <!-- step: phrase -->
+      <div id="cs-phrase">
+        <h2 data-i18n="create_phrase_title">Ваша seed-фраза</h2>
+        <p class="csub" data-i18n="create_phrase_sub">Запишите все 24 слова в этом порядке и храните в надёжном месте.</p>
+        <div class="warn" data-i18n="create_warn">Не делитесь фразой ни с кем — она даёт полный доступ к кошельку и наградам. <b>Вы увидите её только один раз и не сможете восстановить.</b></div>
+        <div class="seedgrid" id="seedgrid"></div>
+        <button class="btn btn-acc btn-block mt" onclick="toVerify()" data-i18n="btn_wrote">Я записал — продолжить</button>
+        <div class="back" onclick="go('scr-connect')" data-i18n="back_link">← назад</div>
+      </div>
+
+      <!-- step: verify -->
+      <div id="cs-verify" class="hidden">
+        <h2 data-i18n="create_verify_title">Проверка</h2>
+        <p class="csub" id="verifyHint">Проверим, что фраза записана верно.</p>
+        <div class="verify-row mt-s" id="verifyRow"></div>
+        <div class="err" id="verifyErr"></div>
+        <button class="btn btn-acc btn-block mt" onclick="checkVerify()" data-i18n="btn_continue">Продолжить</button>
+        <div class="back" onclick="backToPhrase()" data-i18n="back_phrase">← к фразе</div>
+      </div>
+
+      <!-- step: passcode -->
+      <div id="cs-pass" class="hidden">
+        <h2 data-i18n="pass_title">Пароль для защиты</h2>
+        <p class="csub" data-i18n="pass_sub">Используется при повторном входе. Минимум 8 символов.</p>
+        <div class="mt"><label class="fl" data-i18n="lbl_pass">Пароль</label><input class="field" id="pass1" type="password" placeholder="••••••••"></div>
+        <div class="err" id="passErr"></div>
+        <button class="btn btn-acc btn-block mt" onclick="toConfirmPass()" data-i18n="btn_continue">Продолжить</button>
+      </div>
+
+      <!-- step: confirm pass -->
+      <div id="cs-conf" class="hidden">
+        <h2 data-i18n="confpass_title">Подтвердите пароль</h2>
+        <p class="csub" data-i18n="confpass_sub">Введите пароль ещё раз.</p>
+        <div class="mt"><label class="fl" data-i18n="lbl_pass_repeat">Повтор пароля</label><input class="field" id="pass2" type="password" placeholder="••••••••"></div>
+        <div class="err" id="confErr"></div>
+        <button class="btn btn-acc btn-block mt" onclick="finishCreate()" data-i18n="btn_create_wallet">Создать кошелёк</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ IMPORT ============ -->
+<section class="screen hidden" id="scr-import">
+  <div class="wrap"><div class="nav"><div class="logo" onclick="go('scr-landing')"><span class="dot"></span><b>DEX</b><i>.DO</i></div><div class="nav-r"><div class="lang-dd"></div></div></div></div>
+  <div class="center">
+    <div class="auth card fade">
+      <h2 data-i18n="import_title">Импорт seed-фразы</h2>
+      <p class="csub" data-i18n="import_sub">Введите вашу 24-словную seed-фразу через пробел, чтобы восстановить кошелёк.</p>
+      <div class="mt"><label class="fl" data-i18n="lbl_seed">Seed-фраза (24 слова)</label><textarea class="field" id="impPhrase" rows="3" placeholder="word1 word2 word3 …"></textarea></div>
+      <div class="mt-s"><label class="fl" data-i18n="lbl_pass_min">Пароль (мин. 8 символов)</label><input class="field" id="impPass" type="password" placeholder="••••••••"></div>
+      <div class="err" id="impErr"></div>
+      <button class="btn btn-acc btn-block mt" onclick="finishImport()" data-i18n="btn_import">Импортировать</button>
+      <div class="back" onclick="go('scr-connect')" data-i18n="back_link">← назад</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONFIRM ============ -->
+<section class="screen hidden" id="scr-confirm">
+  <div class="wrap"><div class="nav"><div class="logo" onclick="go('scr-landing')"><span class="dot"></span><b>DEX</b><i>.DO</i></div><div class="nav-r"><div class="lang-dd"></div></div></div></div>
+  <div class="center">
+    <div class="auth card fade okwrap">
+      <div class="okcirc">✓</div>
+      <h2 data-i18n="confirm_title">Кошелёк подключён</h2>
+      <p class="csub" data-i18n="confirm_sub">Нажмите «Я в деле», чтобы войти в сезон. Ваша активность начнёт засчитываться по этому адресу.</p>
+      <div class="addrbox"><span class="k" data-i18n="lbl_wallet_addr">Адрес кошелька</span><span id="confAddr">0:—</span></div>
+      <div class="mt"><label class="fl" data-i18n="lbl_inviter">Код пригласившего · необязательно</label><input class="field" id="refIn" data-i18n-ph="ph_ref" placeholder="адрес того, кто вас позвал"></div>
+      <div class="err" id="confJoinErr"></div>
+      <button class="btn btn-acc btn-block mt" onclick="joinSeason()" data-i18n="btn_im_in">Я в деле →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CABINET ============ -->
+<section class="screen hidden" id="scr-cabinet">
+  <div class="cab-head">
+    <div class="wrap">
+      <div class="nav">
+        <div class="logo" onclick="go('scr-landing')"><span class="dot"></span><b>DEX</b><i>.DO</i><span class="navtag">Season&nbsp;1</span></div>
+        <div class="nav-r">
+          <div class="lang-dd"></div>
+          <span class="wallet-chip"><span class="ic"></span><span id="cabAddrShort">0:—</span><span class="cp" id="cabCopyAddr" title="copy">⧉</span></span>
+          <span class="logout" onclick="logout()" data-i18n="btn_logout">Выйти</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="cabtitle fade">
+      <h2 data-i18n="cab_title">Личный кабинет</h2>
+      <p data-i18n="cab_sub">Реферальная программа · Shellnet · Season 1</p>
+    </div>
+
+    <div class="stats fade d1">
+      <div class="stat"><div class="k" data-i18n="stat_pts">Ваши points</div><div class="v acc" id="stPts">0</div></div>
+      <div class="stat"><div class="k" data-i18n="stat_refs">Рефералов</div><div class="v" id="stRefs">0</div></div>
+      <div class="stat"><div class="k" data-i18n="stat_rew">Награда с рефералов</div><div class="v" id="stRew">0</div></div>
+    </div>
+
+    <div class="cabgrid">
+      <!-- invite link -->
+      <div class="panel fade d2">
+        <h3 data-i18n="panel_link_title">Ваша реферальная ссылка</h3>
+        <p class="psub" data-i18n="panel_link_sub">Делись ссылкой — когда приглашённый подключит кошелёк и сделает первую сделку или потребление, реферал засчитан и тебе капают points.</p>
+        <div class="refpeople">👥</div>
+        <div id="linkGenWrap">
+          <button class="btn btn-pri btn-block mt-s" onclick="genLink()" data-i18n="btn_gen_link">Сгенерировать ссылку</button>
+        </div>
+        <div id="linkShowWrap" class="hidden">
+          <div class="linkchip">
+            <input class="field" id="refLink" readonly>
+            <button class="cpbtn" id="cpLink" data-i18n="btn_copy">Копировать</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- referral table -->
+      <div class="panel fade d3">
+        <div class="reftable-h">
+          <h3 data-i18n="panel_refs_title">Рефералы</h3>
+          <span class="live"><span class="d"></span>Live</span>
+        </div>
+        <div class="rt" id="reftable">
+          <div class="rhead" data-i18n="th_date">Дата</div><div class="rhead" data-i18n="th_ref">Реферал</div><div class="rhead r" data-i18n="th_act">Активность</div><div class="rhead r" data-i18n="th_reward">Награда</div>
+          <div class="empty" data-i18n="empty_loading">Загрузка…</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="fade d4">
+      <div class="foot">
+        <span data-i18n="footer_text">Прототип. Авторизация — флоу Acki Nacki Wallet (в проде — реальный AN Wallet SDK). Данные в общем сторадже артефакта; в проде — <b>Next.js + PostgreSQL</b>. Points и награды — заглушка под он-чейн активность.</span>
+        <button class="reset" id="resetBtn" data-i18n="btn_reset">сбросить демо</button>
+      </div>
+    </footer>
+  </div>
+</section>
+
+<script>
+/* ============ i18n ============ */
+const LANG_KEY='dexdo_lang';
+const LANGS=['ru','en','zh','es','ko','tr','pt','vi','fr','ja','de'];
+const LOCALES={ru:'ru-RU',en:'en-US',zh:'zh-CN',es:'es-ES',ko:'ko-KR',tr:'tr-TR',pt:'pt-BR',vi:'vi-VN',fr:'fr-FR',ja:'ja-JP',de:'de-DE'};
+let currentLang=(function(){try{var s=localStorage.getItem(LANG_KEY);if(LANGS.indexOf(s)>-1)return s;}catch(e){}var n=(navigator.language||'en').slice(0,2).toLowerCase();return LANGS.indexOf(n)>-1?n:'en';})();
+function loc(){return LOCALES[currentLang]||'en-US';}
+const T={
+  ru:{
+    hero_h1:'Бери ИИ раньше рынка<br><span class="dim">Забери свою долю</span>',
+    hero_lead:'Первый сезон Dark Order идёт на Acki Nacki Shellnet. Подключи кошелёк, покупай и продавай доступ к ИИ-моделям, реально потребляй инференс, приглашай друзей — активность копится в points и конвертируется при claim в конце сезона.',
+    btn_im_in:'Я в деле →', btn_how:'Как это работает',
+    step1_t:'Подключи кошелёк', step1_d:'Acki Nacki Wallet — некастодиальный, на seed-фразе. Создай новый или импортируй.',
+    step2_t:'Используй и приглашай', step2_d:'Доступ к моделям, реальное потребление, вторичный рынок, рефералы — всё капает в points.',
+    step3_t:'Claim', step3_d:'В конце сезона раскрываешь активность и забираешь награду.',
+    act_title:'Что приносит points',
+    act_sub:'Полный список действий, за которые начисляются points. Точные веса начисления закрыты — это защита от накрутки. Но за что и по каким правилам начисляем — открыто.',
+    a1_t:'Доступ к моделям', a1_d:'Покупай и продавай доступ к ИИ-моделям в ордербуке — размещай заявки и закрывай сделки. Учитываются разные модели.',
+    a2_t:'Реальное потребление', a2_d:'Реально потребляй инференс, который купил. Это самый весомый сигнал — его труднее всего подделать.',
+    a3_t:'Вторичный рынок и хедж', a3_d:'Бери позицию на цену модели или на ИИ-события — и хеджируй свою стоимость.',
+    a4_t:'Рефералы', a4_d:'Приглашай по своей ссылке. Реферал засчитан, когда подключился и сделал первую активность.',
+    act_sub2:'Объём на Shellnet не считается — токены тестовые. На mainnet добавятся объём потребления и market-making.',
+    rules_eyebrow:'Правила', rules_title:'Правила сезона',
+    rule1:'<b>Сезон 1 идёт на Shellnet (тестовая сеть).</b> <span>Points — провизорные.</span>',
+    rule2:'<b>Награда — в токене NACKL.</b> <span>При выходе на mainnet points конвертируются в NACKL-аллокацию.</span>',
+    rule3:'<b>Чтобы забрать награду — claim в конце сезона.</b> <span>Выводишь средства на публичный кошелёк и подтверждаешь владение.</span>',
+    rule4:'<b>Точные веса начисления закрыты.</b> <span>Это защита от накрутки. Список действий и правила сезона — публичны.</span>',
+    rule5:'<b>Правила не меняются задним числом</b> <span>в минус участникам.</span>',
+    rule6:'<b>Накрутка отсекается.</b> <span>Сделки сам с собой и мульти-аккаунты не засчитываются — проверяем при claim.</span>',
+    rule7:'<b>На действия есть лимиты</b> <span>— против ботов.</span>',
+    connect_title:'Подключить кошелёк',
+    connect_sub:'Сезон 1 идёт на Acki Nacki Shellnet. Используется кошелёк Acki Nacki — некастодиальный, на seed-фразе. Регистрация не нужна.',
+    opt_create_t:'Создать новый кошелёк', opt_create_d:'Сгенерируем 24-словную seed-фразу',
+    opt_import_t:'Импортировать seed-фразу', opt_import_d:'Восстановить существующий кошелёк',
+    back_link:'← назад', back_phrase:'← к фразе',
+    create_phrase_title:'Ваша seed-фраза', create_phrase_sub:'Запишите все 24 слова в этом порядке и храните в надёжном месте.',
+    create_warn:'Не делитесь фразой ни с кем — она даёт полный доступ к кошельку и наградам. <b>Вы увидите её только один раз и не сможете восстановить.</b>',
+    btn_wrote:'Я записал — продолжить',
+    create_verify_title:'Проверка', verify_hint_default:'Проверим, что фраза записана верно.',
+    verify_hint:'Введите слова под номерами {n}.', verify_err:'Слова не совпадают. Проверьте записанную фразу.',
+    btn_continue:'Продолжить',
+    pass_title:'Пароль для защиты', pass_sub:'Используется при повторном входе. Минимум 8 символов.', lbl_pass:'Пароль', pass_min_err:'Минимум 8 символов.',
+    confpass_title:'Подтвердите пароль', confpass_sub:'Введите пароль ещё раз.', lbl_pass_repeat:'Повтор пароля', pass_mismatch:'Пароль не совпадает.', btn_create_wallet:'Создать кошелёк',
+    import_title:'Импорт seed-фразы', import_sub:'Введите вашу 24-словную seed-фразу через пробел, чтобы восстановить кошелёк.', lbl_seed:'Seed-фраза (24 слова)', lbl_pass_min:'Пароль (мин. 8 символов)', btn_import:'Импортировать',
+    imp_count_err:'Нужно ровно 24 слова (сейчас {n}).', imp_passmin_err:'Пароль — минимум 8 символов.',
+    confirm_title:'Кошелёк подключён', confirm_sub:'Нажмите «Я в деле», чтобы войти в сезон. Ваша активность начнёт засчитываться по этому адресу.',
+    lbl_wallet_addr:'Адрес кошелька', lbl_inviter:'Код пригласившего · необязательно', ph_ref:'адрес того, кто вас позвал',
+    join_addr_err:'Код пригласившего должен быть адресом 0:…', join_self_err:'Нельзя пригласить самого себя.',
+    btn_logout:'Выйти', cab_title:'Личный кабинет', cab_sub:'Реферальная программа · Shellnet · Season 1',
+    stat_pts:'Ваши points', stat_refs:'Рефералов', stat_rew:'Награда с рефералов',
+    panel_link_title:'Ваша реферальная ссылка', panel_link_sub:'Делись ссылкой — когда приглашённый подключит кошелёк и сделает первую сделку или потребление, реферал засчитан и тебе капают points.', btn_gen_link:'Сгенерировать ссылку', btn_copy:'Копировать',
+    panel_refs_title:'Рефералы', th_date:'Дата', th_ref:'Реферал', th_act:'Активность', th_reward:'Награда',
+    empty_loading:'Загрузка…', empty_none:'Пока никого не пригласили. Сгенерируй ссылку и поделись.',
+    footer_text:'Прототип. Авторизация — флоу Acki Nacki Wallet (в проде — реальный AN Wallet SDK). Данные в общем сторадже артефакта; в проде — <b>Next.js + PostgreSQL</b>. Points и награды — заглушка под он-чейн активность.',
+    btn_reset:'сбросить демо', reset_confirm:'точно? ещё раз', reset_running:'сбрасываю…', copied:'Скопировано'
+  },
+  en:{
+    hero_h1:'Get AI ahead of the market<br><span class="dim">Take your share</span>',
+    hero_lead:'Dark Order Season 1 is live on Acki Nacki Shellnet. Connect your wallet, buy and sell access to AI models, actually consume the inference, invite friends — your activity accrues as points and converts on claim at the end of the season.',
+    btn_im_in:'I\u2019m in →', btn_how:'How it works',
+    step1_t:'Connect a wallet', step1_d:'Acki Nacki Wallet — non-custodial, seed-phrase based. Create a new one or import.',
+    step2_t:'Use it and invite', step2_d:'Model access, real consumption, the secondary market, referrals — it all earns points.',
+    step3_t:'Claim', step3_d:'At the end of the season you reveal your activity and claim your reward.',
+    act_title:'What earns points',
+    act_sub:'The full list of actions that earn points. Exact point weights are kept private — that\u2019s anti-gaming protection. But what we reward and the rules behind it are open.',
+    a1_t:'Model access', a1_d:'Buy and sell access to AI models in the order book — place orders and fill them. Activity across different models counts.',
+    a2_t:'Real consumption', a2_d:'Actually consume the inference you bought. It\u2019s the strongest signal — the hardest to fake.',
+    a3_t:'Secondary market & hedge', a3_d:'Take a position on a model\u2019s price or on AI events — and hedge your own cost.',
+    a4_t:'Referrals', a4_d:'Invite via your link. A referral counts once they connect and make their first activity.',
+    act_sub2:'Volume on Shellnet doesn\u2019t count — tokens are testnet. Consumption volume and market-making will be added on mainnet.',
+    rules_eyebrow:'Rules', rules_title:'Season rules',
+    rule1:'<b>Season 1 runs on Shellnet (testnet).</b> <span>Points are provisional.</span>',
+    rule2:'<b>Rewards are paid in the NACKL token.</b> <span>On mainnet launch, points convert into a NACKL allocation.</span>',
+    rule3:'<b>To get your reward — claim at the end of the season.</b> <span>You withdraw to a public wallet and confirm ownership.</span>',
+    rule4:'<b>Exact point weights are private.</b> <span>That\u2019s anti-gaming protection. The list of actions and season rules are public.</span>',
+    rule5:'<b>Rules don\u2019t change retroactively</b> <span>to participants\u2019 detriment.</span>',
+    rule6:'<b>Gaming is filtered out.</b> <span>Self-trading and multi-accounts don\u2019t count — verified at claim.</span>',
+    rule7:'<b>Actions have limits</b> <span>— to keep bots out.</span>',
+    connect_title:'Connect wallet',
+    connect_sub:'Season 1 runs on Acki Nacki Shellnet. It uses the Acki Nacki wallet — non-custodial, seed-phrase based. No sign-up needed.',
+    opt_create_t:'Create a new wallet', opt_create_d:'We\u2019ll generate a 24-word seed phrase',
+    opt_import_t:'Import a seed phrase', opt_import_d:'Restore an existing wallet',
+    back_link:'← back', back_phrase:'← back to phrase',
+    create_phrase_title:'Your seed phrase', create_phrase_sub:'Write down all 24 words in this order and store them somewhere safe.',
+    create_warn:'Don\u2019t share the phrase with anyone — it grants full access to your wallet and rewards. <b>You\u2019ll see it only once and can\u2019t recover it.</b>',
+    btn_wrote:'I\u2019ve written it down — continue',
+    create_verify_title:'Verification', verify_hint_default:'Let\u2019s confirm the phrase was written down correctly.',
+    verify_hint:'Enter the words at positions {n}.', verify_err:'Words don\u2019t match. Check your written phrase.',
+    btn_continue:'Continue',
+    pass_title:'Protection password', pass_sub:'Used when you log back in. Minimum 8 characters.', lbl_pass:'Password', pass_min_err:'Minimum 8 characters.',
+    confpass_title:'Confirm password', confpass_sub:'Enter the password again.', lbl_pass_repeat:'Repeat password', pass_mismatch:'Passwords don\u2019t match.', btn_create_wallet:'Create wallet',
+    import_title:'Import seed phrase', import_sub:'Enter your 24-word seed phrase separated by spaces to restore your wallet.', lbl_seed:'Seed phrase (24 words)', lbl_pass_min:'Password (min. 8 characters)', btn_import:'Import',
+    imp_count_err:'You need exactly 24 words (currently {n}).', imp_passmin_err:'Password — minimum 8 characters.',
+    confirm_title:'Wallet connected', confirm_sub:'Tap \u201cI\u2019m in\u201d to enter the season. Your activity will start counting for this address.',
+    lbl_wallet_addr:'Wallet address', lbl_inviter:'Inviter code · optional', ph_ref:'address of whoever invited you',
+    join_addr_err:'Inviter code must be a 0:… address.', join_self_err:'You can\u2019t invite yourself.',
+    btn_logout:'Log out', cab_title:'Dashboard', cab_sub:'Referral program · Shellnet · Season 1',
+    stat_pts:'Your points', stat_refs:'Referrals', stat_rew:'Referral rewards',
+    panel_link_title:'Your referral link', panel_link_sub:'Share your link — when an invitee connects a wallet and makes their first deal or consumption, the referral counts and you earn points.', btn_gen_link:'Generate link', btn_copy:'Copy',
+    panel_refs_title:'Referrals', th_date:'Date', th_ref:'Referral', th_act:'Activity', th_reward:'Reward',
+    empty_loading:'Loading…', empty_none:'No referrals yet. Generate a link and share it.',
+    footer_text:'Prototype. Auth uses the Acki Nacki Wallet flow (real AN Wallet SDK in production). Data is in shared artifact storage; in production — <b>Next.js + PostgreSQL</b>. Points and rewards are a stub for on-chain activity.',
+    btn_reset:'reset demo', reset_confirm:'sure? click again', reset_running:'resetting…', copied:'Copied'
+  },
+  zh:{
+    hero_h1:"抢在市场前拿到 AI<br><span class=\"dim\">拿走你的那份</span>",
+    hero_lead:"Dark Order 第一季现已 Live，跑在 Acki Nacki Shellnet 上。连接钱包，买卖 AI 模型的访问权，真正去消耗推理，邀请朋友——你的活跃度会累积成 points，并在赛季结束时通过 claim 兑换。",
+    btn_im_in:"算我一个 →",
+    btn_how:"怎么玩",
+    step1_t:"连接钱包",
+    step1_d:"Acki Nacki Wallet——非托管，基于 seed phrase。新建一个，或直接导入。",
+    step2_t:"使用并邀请",
+    step2_d:"模型访问权、真实消耗、二级市场、推荐拉新——全都能攒 points。",
+    step3_t:"Claim",
+    step3_d:"赛季结束时，公开你的活跃记录并 claim 奖励。",
+    act_title:"什么能赚 points",
+    act_sub:"能赚 points 的完整行为清单。具体计分权重不公开——这是防刷机制。但奖励什么行为、按什么规则计分，全部公开。",
+    a1_t:"模型访问权",
+    a1_d:"在 order book 里买卖 AI 模型的访问权——挂单并成交。参与不同模型都会计入。",
+    a2_t:"真实消耗",
+    a2_d:"真正去消耗你买到的推理。这是最有分量的信号——最难造假。",
+    a3_t:"二级市场与对冲",
+    a3_d:"对模型价格或 AI 事件下注建仓——并对冲你自己的成本。",
+    a4_t:"推荐好友",
+    a4_d:"用你的链接邀请。对方连接钱包并产生首次活跃后，推荐才算数。",
+    act_sub2:"Shellnet 上的额度不计分——代币只是 testnet 的。消耗量和 market-making 会在 mainnet 上线后加入。",
+    rules_eyebrow:"规则",
+    rules_title:"赛季规则",
+    rule1:"<b>第一季在 Shellnet（testnet）上进行。</b> <span>points 是临时性的。</span>",
+    rule2:"<b>奖励以 NACKL 代币发放。</b> <span>mainnet 上线时，points 将转换为 NACKL 配额。</span>",
+    rule3:"<b>想拿奖励——赛季结束时 claim。</b> <span>把资产提到公开钱包并确认所有权。</span>",
+    rule4:"<b>具体计分权重不公开。</b> <span>这是防刷机制。行为清单和赛季规则全部公开。</span>",
+    rule5:"<b>规则不会事后追溯修改</b> <span>让参与者吃亏。</span>",
+    rule6:"<b>刷分会被过滤。</b> <span>自买自卖和多开账号不计分——claim 时统一核查。</span>",
+    rule7:"<b>各类行为设有上限</b> <span>——拦住机器人。</span>",
+    connect_title:"连接钱包",
+    connect_sub:"第一季在 Acki Nacki Shellnet 上进行。使用 Acki Nacki 钱包——非托管，基于 seed phrase。无需注册。",
+    opt_create_t:"创建新钱包",
+    opt_create_d:"我们会为你生成 24 个单词的 seed phrase",
+    opt_import_t:"导入 seed phrase",
+    opt_import_d:"恢复已有钱包",
+    back_link:"← 返回",
+    back_phrase:"← 回到 seed phrase",
+    create_phrase_title:"你的 seed phrase",
+    create_phrase_sub:"按此顺序抄下全部 24 个单词，并保存在安全的地方。",
+    create_warn:"不要把 seed phrase 透露给任何人——它能完全控制你的钱包和奖励。<b>它只会显示这一次，之后无法找回。</b>",
+    btn_wrote:"我抄好了——继续",
+    create_verify_title:"验证",
+    verify_hint_default:"确认一下 seed phrase 抄写无误。",
+    verify_hint:"请输入第 {n} 个位置的单词。",
+    verify_err:"单词不匹配。检查你抄下的 seed phrase。",
+    btn_continue:"继续",
+    pass_title:"设置保护密码",
+    pass_sub:"再次登录时使用。至少 8 个字符。",
+    lbl_pass:"密码",
+    pass_min_err:"至少 8 个字符。",
+    confpass_title:"确认密码",
+    confpass_sub:"再输入一次密码。",
+    lbl_pass_repeat:"重复密码",
+    pass_mismatch:"两次密码不一致。",
+    btn_create_wallet:"创建钱包",
+    import_title:"导入 seed phrase",
+    import_sub:"把 24 个单词的 seed phrase 用空格分隔输入，即可恢复钱包。",
+    lbl_seed:"Seed phrase（24 个单词）",
+    lbl_pass_min:"密码（至少 8 个字符）",
+    btn_import:"导入",
+    imp_count_err:"需要正好 24 个单词（当前 {n} 个）。",
+    imp_passmin_err:"密码至少 8 个字符。",
+    confirm_title:"钱包已连接",
+    confirm_sub:"点「算我一个」进入赛季。你的活跃度将开始记到这个地址上。",
+    lbl_wallet_addr:"钱包地址",
+    lbl_inviter:"邀请人代码 · 选填",
+    ph_ref:"邀请你的人的地址",
+    join_addr_err:"邀请人代码必须是 0:… 格式的地址。",
+    join_self_err:"不能邀请你自己。",
+    btn_logout:"退出",
+    cab_title:"个人中心",
+    cab_sub:"推荐计划 · Shellnet · Season 1",
+    stat_pts:"你的 points",
+    stat_refs:"推荐人数",
+    stat_rew:"推荐奖励",
+    panel_link_title:"你的推荐链接",
+    panel_link_sub:"分享你的链接——被邀请的人连接钱包并完成第一笔成交或消耗后，推荐就算数，points 进你口袋。",
+    btn_gen_link:"生成链接",
+    btn_copy:"复制",
+    panel_refs_title:"推荐记录",
+    th_date:"日期",
+    th_ref:"被推荐人",
+    th_act:"活跃度",
+    th_reward:"奖励",
+    empty_loading:"加载中…",
+    empty_none:"还没邀请到人。生成链接，分享出去。",
+    footer_text:"原型版本。登录采用 Acki Nacki Wallet 流程（生产环境为真实的 AN Wallet SDK）。数据存放在 artifact 共享存储中；生产环境为 <b>Next.js + PostgreSQL</b>。points 和奖励是链上活动的占位实现。",
+    btn_reset:"重置演示",
+    reset_confirm:"确定？再点一次",
+    reset_running:"重置中…",
+    copied:"已复制"
+  },
+  es:{
+    hero_h1:"Consigue IA antes que el mercado<br><span class=\"dim\">Llévate tu parte</span>",
+    hero_lead:"La primera temporada de Dark Order ya está live en Acki Nacki Shellnet. Conecta tu wallet, compra y vende acceso a modelos de IA, consume de verdad la inferencia, invita a tus amigos: tu actividad se acumula en points y se convierte al hacer claim al final de la temporada.",
+    btn_im_in:"Me apunto →",
+    btn_how:"Cómo funciona",
+    step1_t:"Conecta una wallet",
+    step1_d:"Acki Nacki Wallet: no custodial, basada en seed phrase. Crea una nueva o importa la tuya.",
+    step2_t:"Úsalo e invita",
+    step2_d:"Acceso a modelos, consumo real, el mercado secundario, referidos: todo suma points.",
+    step3_t:"Claim",
+    step3_d:"Al final de la temporada revelas tu actividad y haces claim de tu recompensa.",
+    act_title:"Qué da points",
+    act_sub:"La lista completa de acciones que dan points. Los pesos exactos no se publican: es protección anti-farmeo. Pero qué premiamos y con qué reglas, eso es público.",
+    a1_t:"Acceso a modelos",
+    a1_d:"Compra y vende acceso a modelos de IA en el order book: coloca órdenes y ciérralas. Cuenta la participación en distintos modelos.",
+    a2_t:"Consumo real",
+    a2_d:"Consume de verdad la inferencia que compraste. Es la señal con más peso: la más difícil de falsear.",
+    a3_t:"Mercado secundario y cobertura",
+    a3_d:"Toma una posición sobre el precio de un modelo o sobre eventos de IA, y cubre tu propio coste.",
+    a4_t:"Referidos",
+    a4_d:"Invita con tu enlace. El referido cuenta cuando se conecta y hace su primera actividad.",
+    act_sub2:"El volumen en Shellnet no cuenta: los tokens son de testnet. El volumen de consumo y el market-making llegarán con la mainnet.",
+    rules_eyebrow:"Reglas",
+    rules_title:"Reglas de la temporada",
+    rule1:"<b>La temporada 1 se juega en Shellnet (testnet).</b> <span>Los points son provisionales.</span>",
+    rule2:"<b>La recompensa se paga en el token NACKL.</b> <span>Al salir a mainnet, los points se convierten en una asignación de NACKL.</span>",
+    rule3:"<b>Para llevarte la recompensa: claim al final de la temporada.</b> <span>Retiras a una wallet pública y confirmas que es tuya.</span>",
+    rule4:"<b>Los pesos exactos de los points no se publican.</b> <span>Es protección anti-farmeo. La lista de acciones y las reglas de la temporada son públicas.</span>",
+    rule5:"<b>Las reglas no cambian con efecto retroactivo</b> <span>en perjuicio de los participantes.</span>",
+    rule6:"<b>El farmeo se queda fuera.</b> <span>Las operaciones contigo mismo y las multicuentas no cuentan: lo comprobamos en el claim.</span>",
+    rule7:"<b>Las acciones tienen límites</b> <span>— para frenar a los bots.</span>",
+    connect_title:"Conectar wallet",
+    connect_sub:"La temporada 1 se juega en Acki Nacki Shellnet. Se usa la wallet de Acki Nacki: no custodial, basada en seed phrase. No hace falta registrarse.",
+    opt_create_t:"Crear una wallet nueva",
+    opt_create_d:"Generaremos una seed phrase de 24 palabras",
+    opt_import_t:"Importar una seed phrase",
+    opt_import_d:"Restaurar una wallet existente",
+    back_link:"← atrás",
+    back_phrase:"← volver a la frase",
+    create_phrase_title:"Tu seed phrase",
+    create_phrase_sub:"Apunta las 24 palabras en este orden y guárdalas en un lugar seguro.",
+    create_warn:"No compartas la frase con nadie: da acceso total a tu wallet y a tus recompensas. <b>La verás solo una vez y no podrás recuperarla.</b>",
+    btn_wrote:"Ya la he apuntado — continuar",
+    create_verify_title:"Verificación",
+    verify_hint_default:"Vamos a comprobar que has apuntado bien la frase.",
+    verify_hint:"Introduce las palabras de las posiciones {n}.",
+    verify_err:"Las palabras no coinciden. Revisa la frase que has apuntado.",
+    btn_continue:"Continuar",
+    pass_title:"Contraseña de seguridad",
+    pass_sub:"Se usa cuando vuelves a entrar. Mínimo 8 caracteres.",
+    lbl_pass:"Contraseña",
+    pass_min_err:"Mínimo 8 caracteres.",
+    confpass_title:"Confirma la contraseña",
+    confpass_sub:"Introduce la contraseña otra vez.",
+    lbl_pass_repeat:"Repite la contraseña",
+    pass_mismatch:"Las contraseñas no coinciden.",
+    btn_create_wallet:"Crear wallet",
+    import_title:"Importar seed phrase",
+    import_sub:"Introduce tu seed phrase de 24 palabras separadas por espacios para restaurar tu wallet.",
+    lbl_seed:"Seed phrase (24 palabras)",
+    lbl_pass_min:"Contraseña (mín. 8 caracteres)",
+    btn_import:"Importar",
+    imp_count_err:"Necesitas exactamente 24 palabras (ahora hay {n}).",
+    imp_passmin_err:"Contraseña: mínimo 8 caracteres.",
+    confirm_title:"Wallet conectada",
+    confirm_sub:"Pulsa «Me apunto» para entrar en la temporada. Tu actividad empezará a contar para esta dirección.",
+    lbl_wallet_addr:"Dirección de la wallet",
+    lbl_inviter:"Código del invitador · opcional",
+    ph_ref:"dirección de quien te invitó",
+    join_addr_err:"El código del invitador debe ser una dirección 0:…",
+    join_self_err:"No puedes invitarte a ti mismo.",
+    btn_logout:"Salir",
+    cab_title:"Panel personal",
+    cab_sub:"Programa de referidos · Shellnet · Season 1",
+    stat_pts:"Tus points",
+    stat_refs:"Referidos",
+    stat_rew:"Recompensas por referidos",
+    panel_link_title:"Tu enlace de referido",
+    panel_link_sub:"Comparte tu enlace: cuando el invitado conecte su wallet y haga su primera operación o consumo, el referido cuenta y tú sumas points.",
+    btn_gen_link:"Generar enlace",
+    btn_copy:"Copiar",
+    panel_refs_title:"Referidos",
+    th_date:"Fecha",
+    th_ref:"Referido",
+    th_act:"Actividad",
+    th_reward:"Recompensa",
+    empty_loading:"Cargando…",
+    empty_none:"Aún no has invitado a nadie. Genera tu enlace y compártelo.",
+    footer_text:"Prototipo. La autenticación usa el flujo de Acki Nacki Wallet (en producción, el AN Wallet SDK real). Los datos viven en el almacenamiento compartido del artefacto; en producción, <b>Next.js + PostgreSQL</b>. Los points y las recompensas son un stub de la actividad on-chain.",
+    btn_reset:"resetear demo",
+    reset_confirm:"¿seguro? pulsa otra vez",
+    reset_running:"reseteando…",
+    copied:"Copiado"
+  },
+  ko:{
+    hero_h1:"시장보다 한발 먼저 AI를 잡으세요<br><span class=\"dim\">내 몫을 챙기세요</span>",
+    hero_lead:"Dark Order Season 1이 Acki Nacki Shellnet에서 Live로 진행 중이에요. 지갑을 연결하고, AI 모델 접근권을 사고팔고, 산 추론을 실제로 소비하고, 친구를 초대하세요 — 활동은 points로 쌓이고 시즌 말 claim 때 전환돼요.",
+    btn_im_in:"참여할게요 →",
+    btn_how:"어떻게 진행되나요",
+    step1_t:"지갑 연결하기",
+    step1_d:"Acki Nacki Wallet — 논커스터디얼, seed phrase 기반이에요. 새로 만들거나 가져오세요.",
+    step2_t:"사용하고 초대하기",
+    step2_d:"모델 접근권, 실제 소비, 2차 시장, 레퍼럴 — 전부 points로 쌓여요.",
+    step3_t:"Claim",
+    step3_d:"시즌이 끝나면 활동을 공개하고 보상을 claim해요.",
+    act_title:"points가 쌓이는 활동",
+    act_sub:"points가 적립되는 활동 전체 목록이에요. 정확한 points 가중치는 비공개예요 — 어뷰징 방지를 위해서죠. 하지만 어떤 활동에 보상하고 어떤 규칙으로 적립하는지는 공개돼 있어요.",
+    a1_t:"모델 접근권",
+    a1_d:"order book에서 AI 모델 접근권을 사고파세요 — 주문을 넣고 체결하세요. 여러 모델에 걸친 참여가 집계돼요.",
+    a2_t:"실제 소비",
+    a2_d:"산 추론을 실제로 소비하세요. 가장 무게 있는 신호예요 — 위조가 가장 어렵죠.",
+    a3_t:"2차 시장과 헤지",
+    a3_d:"모델 가격이나 AI 이벤트에 포지션을 잡고 — 자신의 비용을 헤지하세요.",
+    a4_t:"레퍼럴",
+    a4_d:"내 링크로 초대하세요. 초대받은 사람이 지갑을 연결하고 첫 활동을 하면 레퍼럴로 인정돼요.",
+    act_sub2:"Shellnet에서의 물량은 집계되지 않아요 — 토큰이 testnet용이거든요. 소비량과 market-making은 mainnet에서 추가될 예정이에요.",
+    rules_eyebrow:"규칙",
+    rules_title:"시즌 규칙",
+    rule1:"<b>Season 1은 Shellnet(testnet)에서 진행돼요.</b> <span>Points는 잠정 집계예요.</span>",
+    rule2:"<b>보상은 NACKL 토큰으로 지급돼요.</b> <span>mainnet 출시 시 points는 NACKL 할당량으로 전환돼요.</span>",
+    rule3:"<b>보상을 받으려면 시즌 말에 claim하세요.</b> <span>퍼블릭 지갑으로 출금하고 소유권을 증명해요.</span>",
+    rule4:"<b>정확한 points 가중치는 비공개예요.</b> <span>어뷰징 방지를 위한 거예요. 활동 목록과 시즌 규칙은 공개돼 있어요.</span>",
+    rule5:"<b>규칙은 소급해서 바뀌지 않아요</b> <span>— 참가자에게 불리한 쪽으로는요.</span>",
+    rule6:"<b>어뷰징은 걸러내요.</b> <span>자전거래와 다중 계정은 집계되지 않아요 — claim 시 검증해요.</span>",
+    rule7:"<b>활동에는 한도가 있어요</b> <span>— 봇을 막기 위해서죠.</span>",
+    connect_title:"지갑 연결",
+    connect_sub:"Season 1은 Acki Nacki Shellnet에서 진행돼요. Acki Nacki 지갑을 사용해요 — 논커스터디얼, seed phrase 기반이에요. 회원가입은 필요 없어요.",
+    opt_create_t:"새 지갑 만들기",
+    opt_create_d:"24단어 seed phrase를 생성해 드려요",
+    opt_import_t:"seed phrase 가져오기",
+    opt_import_d:"기존 지갑 복구하기",
+    back_link:"← 뒤로",
+    back_phrase:"← seed phrase로",
+    create_phrase_title:"내 seed phrase",
+    create_phrase_sub:"24개 단어를 이 순서대로 모두 적어서 안전한 곳에 보관하세요.",
+    create_warn:"이 구문은 누구와도 공유하지 마세요 — 지갑과 보상에 대한 전체 접근 권한이 넘어가요. <b>단 한 번만 표시되며 다시 복구할 수 없어요.</b>",
+    btn_wrote:"다 적었어요 — 계속하기",
+    create_verify_title:"확인",
+    verify_hint_default:"구문을 제대로 적었는지 확인해 볼게요.",
+    verify_hint:"{n}번 단어를 입력하세요.",
+    verify_err:"단어가 일치하지 않아요. 적어 둔 구문을 확인하세요.",
+    btn_continue:"계속하기",
+    pass_title:"보호용 비밀번호",
+    pass_sub:"다시 로그인할 때 사용해요. 최소 8자예요.",
+    lbl_pass:"비밀번호",
+    pass_min_err:"최소 8자예요.",
+    confpass_title:"비밀번호 확인",
+    confpass_sub:"비밀번호를 한 번 더 입력하세요.",
+    lbl_pass_repeat:"비밀번호 재입력",
+    pass_mismatch:"비밀번호가 일치하지 않아요.",
+    btn_create_wallet:"지갑 만들기",
+    import_title:"seed phrase 가져오기",
+    import_sub:"지갑을 복구하려면 24단어 seed phrase를 공백으로 구분해 입력하세요.",
+    lbl_seed:"Seed phrase (24단어)",
+    lbl_pass_min:"비밀번호 (최소 8자)",
+    btn_import:"가져오기",
+    imp_count_err:"정확히 24개 단어가 필요해요 (현재 {n}개).",
+    imp_passmin_err:"비밀번호는 최소 8자예요.",
+    confirm_title:"지갑 연결 완료",
+    confirm_sub:"‘참여할게요’를 누르면 시즌에 입장해요. 이 주소로 활동이 집계되기 시작해요.",
+    lbl_wallet_addr:"지갑 주소",
+    lbl_inviter:"초대인 코드 · 선택사항",
+    ph_ref:"나를 초대한 사람의 주소",
+    join_addr_err:"초대인 코드는 0:… 형식의 주소여야 해요.",
+    join_self_err:"자기 자신은 초대할 수 없어요.",
+    btn_logout:"로그아웃",
+    cab_title:"대시보드",
+    cab_sub:"레퍼럴 프로그램 · Shellnet · Season 1",
+    stat_pts:"내 points",
+    stat_refs:"레퍼럴",
+    stat_rew:"레퍼럴 보상",
+    panel_link_title:"내 레퍼럴 링크",
+    panel_link_sub:"링크를 공유하세요 — 초대받은 사람이 지갑을 연결하고 첫 거래나 소비를 하면 레퍼럴로 인정되고 points가 쌓여요.",
+    btn_gen_link:"링크 생성",
+    btn_copy:"복사",
+    panel_refs_title:"레퍼럴",
+    th_date:"날짜",
+    th_ref:"레퍼럴",
+    th_act:"활동",
+    th_reward:"보상",
+    empty_loading:"불러오는 중…",
+    empty_none:"아직 초대한 사람이 없어요. 링크를 만들어 공유해 보세요.",
+    footer_text:"프로토타입이에요. 인증은 Acki Nacki Wallet 플로우를 사용해요 (프로덕션에서는 실제 AN Wallet SDK). 데이터는 공유 아티팩트 스토리지에 저장되고, 프로덕션에서는 <b>Next.js + PostgreSQL</b>을 사용해요. Points와 보상은 온체인 활동을 대신하는 스텁이에요.",
+    btn_reset:"데모 초기화",
+    reset_confirm:"정말요? 한 번 더",
+    reset_running:"초기화 중…",
+    copied:"복사됨"
+  },
+  tr:{
+    hero_h1:"Piyasadan önce AI'yı yakala<br><span class=\"dim\">Payını kap</span>",
+    hero_lead:"Dark Order'ın ilk sezonu Acki Nacki Shellnet'te yayında. Cüzdanını bağla, AI modellerine erişim al ve sat, aldığın inference'i gerçekten tüket, arkadaşlarını davet et — aktiviten points olarak birikir ve sezon sonunda claim sırasında dönüştürülür.",
+    btn_im_in:"Ben varım →",
+    btn_how:"Nasıl çalışır",
+    step1_t:"Cüzdan bağla",
+    step1_d:"Acki Nacki Wallet — non-custodial, seed phrase tabanlı. Yeni bir tane oluştur veya içe aktar.",
+    step2_t:"Kullan ve davet et",
+    step2_d:"Model erişimi, gerçek tüketim, ikincil piyasa, referanslar — hepsi points kazandırır.",
+    step3_t:"Claim",
+    step3_d:"Sezon sonunda aktiviteni açıklar, ödülünü claim edersin.",
+    act_title:"Points nereden gelir",
+    act_sub:"Points kazandıran aksiyonların tam listesi. Kesin points ağırlıkları gizli — bu, hileye karşı koruma. Ama neye ve hangi kurallarla points verdiğimiz tamamen açık.",
+    a1_t:"Model erişimi",
+    a1_d:"order book'ta AI modellerine erişim al ve sat — emir gir ve gerçekleştir. Farklı modellerdeki katılımın sayılır.",
+    a2_t:"Gerçek tüketim",
+    a2_d:"Aldığın inference'i gerçekten tüket. En ağırlıklı sinyal bu — taklit edilmesi en zor olanı.",
+    a3_t:"İkincil piyasa ve hedge",
+    a3_d:"Bir modelin fiyatı ya da AI olayları üzerine pozisyon al — ve kendi maliyetini hedge et.",
+    a4_t:"Referanslar",
+    a4_d:"Linkinle davet et. Referans, kişi bağlanıp ilk aktivitesini yaptığında sayılır.",
+    act_sub2:"Shellnet'teki hacim sayılmaz — tokenlar testnet tokenı. Tüketim hacmi ve market-making, mainnet'te devreye girecek.",
+    rules_eyebrow:"Kurallar",
+    rules_title:"Sezon kuralları",
+    rule1:"<b>Sezon 1, Shellnet (testnet) üzerinde gerçekleşiyor.</b> <span>Points geçicidir.</span>",
+    rule2:"<b>Ödüller NACKL token olarak ödenir.</b> <span>Mainnet'e geçişte points, NACKL tahsisine dönüşür.</span>",
+    rule3:"<b>Ödülünü almak için — sezon sonunda claim.</b> <span>Varlıkları herkese açık bir cüzdana çekip sahipliğini doğrularsın.</span>",
+    rule4:"<b>Kesin points ağırlıkları gizli.</b> <span>Bu, hileye karşı koruma. Aksiyon listesi ve sezon kuralları herkese açık.</span>",
+    rule5:"<b>Kurallar geriye dönük değiştirilmez</b> <span>— katılımcıların aleyhine olacak şekilde.</span>",
+    rule6:"<b>Hile eleniyor.</b> <span>Kendinle yaptığın işlemler ve çoklu hesaplar sayılmaz — claim sırasında kontrol ediyoruz.</span>",
+    rule7:"<b>Aksiyonların limiti var</b> <span>— botlara karşı.</span>",
+    connect_title:"Cüzdan bağla",
+    connect_sub:"Sezon 1, Acki Nacki Shellnet'te gerçekleşiyor. Acki Nacki cüzdanı kullanılıyor — non-custodial, seed phrase tabanlı. Kayıt gerekmez.",
+    opt_create_t:"Yeni cüzdan oluştur",
+    opt_create_d:"24 kelimelik bir seed phrase üreteceğiz",
+    opt_import_t:"Seed phrase içe aktar",
+    opt_import_d:"Mevcut bir cüzdanı geri yükle",
+    back_link:"← geri",
+    back_phrase:"← seed phrase'e dön",
+    create_phrase_title:"Seed phrase'in",
+    create_phrase_sub:"24 kelimenin hepsini bu sırayla yaz ve güvenli bir yerde sakla.",
+    create_warn:"Seed phrase'ini kimseyle paylaşma — cüzdanına ve ödüllerine tam erişim verir. <b>Onu sadece bir kez görürsün ve geri getiremezsin.</b>",
+    btn_wrote:"Yazdım — devam et",
+    create_verify_title:"Doğrulama",
+    verify_hint_default:"Seed phrase'i doğru yazdığından emin olalım.",
+    verify_hint:"{n} numaralı kelimeleri gir.",
+    verify_err:"Kelimeler eşleşmiyor. Yazdığın seed phrase'i kontrol et.",
+    btn_continue:"Devam et",
+    pass_title:"Güvenlik şifresi",
+    pass_sub:"Tekrar giriş yaparken kullanılır. En az 8 karakter.",
+    lbl_pass:"Şifre",
+    pass_min_err:"En az 8 karakter.",
+    confpass_title:"Şifreyi onayla",
+    confpass_sub:"Şifreyi tekrar gir.",
+    lbl_pass_repeat:"Şifre tekrarı",
+    pass_mismatch:"Şifreler eşleşmiyor.",
+    btn_create_wallet:"Cüzdan oluştur",
+    import_title:"Seed phrase'i içe aktar",
+    import_sub:"Cüzdanını geri yüklemek için 24 kelimelik seed phrase'ini boşluklarla ayırarak gir.",
+    lbl_seed:"Seed phrase (24 kelime)",
+    lbl_pass_min:"Şifre (en az 8 karakter)",
+    btn_import:"İçe aktar",
+    imp_count_err:"Tam olarak 24 kelime gerekli (şu an {n}).",
+    imp_passmin_err:"Şifre — en az 8 karakter.",
+    confirm_title:"Cüzdan bağlandı",
+    confirm_sub:"Sezona girmek için “Ben varım”a dokun. Aktiviten bu adres üzerinden sayılmaya başlayacak.",
+    lbl_wallet_addr:"Cüzdan adresi",
+    lbl_inviter:"Davet edenin kodu · isteğe bağlı",
+    ph_ref:"seni davet edenin adresi",
+    join_addr_err:"Davet edenin kodu 0:… formatında bir adres olmalı.",
+    join_self_err:"Kendini davet edemezsin.",
+    btn_logout:"Çıkış yap",
+    cab_title:"Panel",
+    cab_sub:"Referans programı · Shellnet · Season 1",
+    stat_pts:"Points'in",
+    stat_refs:"Referanslar",
+    stat_rew:"Referans ödülleri",
+    panel_link_title:"Referans linkin",
+    panel_link_sub:"Linkini paylaş — davet ettiğin kişi cüzdanını bağlayıp ilk işlemini ya da tüketimini yaptığında referans sayılır ve points cebine akar.",
+    btn_gen_link:"Link oluştur",
+    btn_copy:"Kopyala",
+    panel_refs_title:"Referanslar",
+    th_date:"Tarih",
+    th_ref:"Referans",
+    th_act:"Aktivite",
+    th_reward:"Ödül",
+    empty_loading:"Yükleniyor…",
+    empty_none:"Henüz kimseyi davet etmedin. Link oluştur ve paylaş.",
+    footer_text:"Prototip. Kimlik doğrulama, Acki Nacki Wallet akışıyla çalışıyor (prod'da gerçek AN Wallet SDK). Veriler ortak artifact deposunda; prod'da — <b>Next.js + PostgreSQL</b>. Points ve ödüller, on-chain aktivite için yer tutucu.",
+    btn_reset:"demoyu sıfırla",
+    reset_confirm:"emin misin? bir daha tıkla",
+    reset_running:"sıfırlanıyor…",
+    copied:"Kopyalandı"
+  },
+  pt:{
+    hero_h1:"Garanta IA antes do mercado<br><span class=\"dim\">Pegue a sua parte</span>",
+    hero_lead:"A Season 1 do Dark Order já está live na Acki Nacki Shellnet. Conecte sua carteira, compre e venda acesso a modelos de IA, consuma de verdade a inferência, convide amigos — sua atividade acumula em points e converte no claim no fim da temporada.",
+    btn_im_in:"Tô dentro →",
+    btn_how:"Como funciona",
+    step1_t:"Conecte uma carteira",
+    step1_d:"Acki Nacki Wallet — não custodial, baseada em seed phrase. Crie uma nova ou importe.",
+    step2_t:"Use e convide",
+    step2_d:"Acesso a modelos, consumo real, o mercado secundário, indicações — tudo rende points.",
+    step3_t:"Claim",
+    step3_d:"No fim da temporada, você revela sua atividade e faz o claim da recompensa.",
+    act_title:"O que rende points",
+    act_sub:"A lista completa de ações que rendem points. Os pesos exatos de pontuação são privados — é proteção contra manipulação. Mas o que recompensamos e as regras por trás disso são abertos.",
+    a1_t:"Acesso a modelos",
+    a1_d:"Compre e venda acesso a modelos de IA no order book — coloque ordens e as execute. A participação em modelos diferentes conta.",
+    a2_t:"Consumo real",
+    a2_d:"Consuma de verdade a inferência que comprou. É o sinal de maior peso — o mais difícil de falsificar.",
+    a3_t:"Mercado secundário e hedge",
+    a3_d:"Assuma uma posição no preço de um modelo ou em eventos de IA — e faça hedge do seu próprio custo.",
+    a4_t:"Indicações",
+    a4_d:"Convide pelo seu link. A indicação conta quando a pessoa conecta e faz a primeira atividade.",
+    act_sub2:"O volume na Shellnet não conta — os tokens são de testnet. Volume de consumo e market-making serão adicionados na mainnet.",
+    rules_eyebrow:"Regras",
+    rules_title:"Regras da temporada",
+    rule1:"<b>A Season 1 roda na Shellnet (testnet).</b> <span>Os points são provisórios.</span>",
+    rule2:"<b>As recompensas são pagas no token NACKL.</b> <span>No lançamento da mainnet, os points convertem em uma alocação de NACKL.</span>",
+    rule3:"<b>Para receber sua recompensa — claim no fim da temporada.</b> <span>Você saca para uma carteira pública e confirma a propriedade.</span>",
+    rule4:"<b>Os pesos exatos de pontuação são privados.</b> <span>É proteção contra manipulação. A lista de ações e as regras da temporada são públicas.</span>",
+    rule5:"<b>As regras não mudam retroativamente</b> <span>em prejuízo dos participantes.</span>",
+    rule6:"<b>Manipulação fica de fora.</b> <span>Trades consigo mesmo e múltiplas contas não contam — verificamos no claim.</span>",
+    rule7:"<b>As ações têm limites</b> <span>— para barrar bots.</span>",
+    connect_title:"Conectar carteira",
+    connect_sub:"A Season 1 roda na Acki Nacki Shellnet. Usa a carteira Acki Nacki — não custodial, baseada em seed phrase. Não precisa de cadastro.",
+    opt_create_t:"Criar carteira nova",
+    opt_create_d:"Vamos gerar uma seed phrase de 24 palavras",
+    opt_import_t:"Importar seed phrase",
+    opt_import_d:"Restaurar uma carteira existente",
+    back_link:"← voltar",
+    back_phrase:"← voltar à frase",
+    create_phrase_title:"Sua seed phrase",
+    create_phrase_sub:"Anote todas as 24 palavras nesta ordem e guarde em um lugar seguro.",
+    create_warn:"Não compartilhe a frase com ninguém — ela dá acesso total à sua carteira e às recompensas. <b>Você vai vê-la só uma vez e não poderá recuperá-la.</b>",
+    btn_wrote:"Anotei — continuar",
+    create_verify_title:"Verificação",
+    verify_hint_default:"Vamos confirmar que a frase foi anotada corretamente.",
+    verify_hint:"Digite as palavras nas posições {n}.",
+    verify_err:"As palavras não batem. Confira a frase que você anotou.",
+    btn_continue:"Continuar",
+    pass_title:"Senha de proteção",
+    pass_sub:"Usada quando você fizer login de novo. Mínimo de 8 caracteres.",
+    lbl_pass:"Senha",
+    pass_min_err:"Mínimo de 8 caracteres.",
+    confpass_title:"Confirme a senha",
+    confpass_sub:"Digite a senha mais uma vez.",
+    lbl_pass_repeat:"Repetir senha",
+    pass_mismatch:"As senhas não batem.",
+    btn_create_wallet:"Criar carteira",
+    import_title:"Importar seed phrase",
+    import_sub:"Digite sua seed phrase de 24 palavras separadas por espaço para restaurar a carteira.",
+    lbl_seed:"Seed phrase (24 palavras)",
+    lbl_pass_min:"Senha (mín. 8 caracteres)",
+    btn_import:"Importar",
+    imp_count_err:"Precisam ser exatamente 24 palavras (agora são {n}).",
+    imp_passmin_err:"Senha — mínimo de 8 caracteres.",
+    confirm_title:"Carteira conectada",
+    confirm_sub:"Toque em \"Tô dentro\" para entrar na temporada. Sua atividade vai começar a contar neste endereço.",
+    lbl_wallet_addr:"Endereço da carteira",
+    lbl_inviter:"Código de quem convidou · opcional",
+    ph_ref:"endereço de quem te convidou",
+    join_addr_err:"O código de quem convidou deve ser um endereço 0:…",
+    join_self_err:"Você não pode convidar a si mesmo.",
+    btn_logout:"Sair",
+    cab_title:"Painel",
+    cab_sub:"Programa de indicação · Shellnet · Season 1",
+    stat_pts:"Seus points",
+    stat_refs:"Indicações",
+    stat_rew:"Recompensas por indicação",
+    panel_link_title:"Seu link de indicação",
+    panel_link_sub:"Compartilhe seu link — quando o convidado conectar a carteira e fizer a primeira operação ou consumo, a indicação conta e você ganha points.",
+    btn_gen_link:"Gerar link",
+    btn_copy:"Copiar",
+    panel_refs_title:"Indicações",
+    th_date:"Data",
+    th_ref:"Indicado",
+    th_act:"Atividade",
+    th_reward:"Recompensa",
+    empty_loading:"Carregando…",
+    empty_none:"Nenhuma indicação ainda. Gere um link e compartilhe.",
+    footer_text:"Protótipo. A autenticação usa o fluxo da Acki Nacki Wallet (AN Wallet SDK de verdade em produção). Os dados ficam no storage compartilhado do artefato; em produção — <b>Next.js + PostgreSQL</b>. Points e recompensas são um stub para a atividade on-chain.",
+    btn_reset:"resetar demo",
+    reset_confirm:"certeza? clique de novo",
+    reset_running:"resetando…",
+    copied:"Copiado"
+  },
+  vi:{
+    hero_h1:"Nắm AI trước cả thị trường<br><span class=\"dim\">Giành lấy phần của bạn</span>",
+    hero_lead:"Season 1 của Dark Order đang Live trên Acki Nacki Shellnet. Kết nối ví, mua và bán quyền truy cập mô hình AI, thực sự tiêu thụ inference đã mua, mời bạn bè — mọi hoạt động được tích lũy thành points và quy đổi khi claim vào cuối mùa.",
+    btn_im_in:"Tham gia ngay →",
+    btn_how:"Cách hoạt động",
+    step1_t:"Kết nối ví",
+    step1_d:"Acki Nacki Wallet — ví non-custodial, dựa trên seed phrase. Tạo ví mới hoặc nhập ví có sẵn.",
+    step2_t:"Sử dụng và mời bạn bè",
+    step2_d:"Quyền truy cập mô hình, tiêu thụ thực, thị trường thứ cấp, giới thiệu bạn bè — tất cả đều sinh points.",
+    step3_t:"Claim",
+    step3_d:"Cuối mùa, bạn công khai hoạt động của mình và claim phần thưởng.",
+    act_title:"Điều gì mang lại points",
+    act_sub:"Danh sách đầy đủ các hành động được tính points. Trọng số tính points chính xác được giữ kín — đây là lớp bảo vệ chống gian lận. Còn thưởng cho điều gì và theo luật nào thì hoàn toàn công khai.",
+    a1_t:"Quyền truy cập mô hình",
+    a1_d:"Mua và bán quyền truy cập mô hình AI trên order book — đặt lệnh và khớp lệnh. Việc tham gia nhiều mô hình khác nhau đều được tính.",
+    a2_t:"Tiêu thụ thực",
+    a2_d:"Thực sự tiêu thụ inference bạn đã mua. Đây là tín hiệu nặng ký nhất — khó làm giả nhất.",
+    a3_t:"Thị trường thứ cấp và hedge",
+    a3_d:"Mở vị thế trên giá của một mô hình hoặc trên các sự kiện AI — và hedge chi phí của chính bạn.",
+    a4_t:"Giới thiệu bạn bè",
+    a4_d:"Mời qua link riêng của bạn. Lượt giới thiệu được tính khi người đó kết nối ví và có hoạt động đầu tiên.",
+    act_sub2:"Khối lượng trên Shellnet không được tính — token chỉ là token testnet. Khối lượng tiêu thụ và market-making sẽ được bổ sung khi lên mainnet.",
+    rules_eyebrow:"Luật chơi",
+    rules_title:"Luật chơi mùa giải",
+    rule1:"<b>Season 1 chạy trên Shellnet (testnet).</b> <span>Points chỉ mang tính tạm thời.</span>",
+    rule2:"<b>Phần thưởng được trả bằng token NACKL.</b> <span>Khi mainnet ra mắt, points sẽ quy đổi thành phần phân bổ NACKL.</span>",
+    rule3:"<b>Muốn nhận thưởng — hãy claim vào cuối mùa.</b> <span>Bạn rút về ví công khai và xác nhận quyền sở hữu.</span>",
+    rule4:"<b>Trọng số tính points chính xác được giữ kín.</b> <span>Đây là lớp chống gian lận. Danh sách hành động và luật chơi của mùa thì công khai.</span>",
+    rule5:"<b>Luật không thay đổi hồi tố</b> <span>theo hướng bất lợi cho người tham gia.</span>",
+    rule6:"<b>Gian lận sẽ bị loại bỏ.</b> <span>Giao dịch với chính mình và dùng nhiều tài khoản đều không được tính — sẽ kiểm tra khi claim.</span>",
+    rule7:"<b>Mỗi hành động đều có giới hạn</b> <span>— để chặn bot.</span>",
+    connect_title:"Kết nối ví",
+    connect_sub:"Season 1 chạy trên Acki Nacki Shellnet. Hệ thống dùng ví Acki Nacki — non-custodial, dựa trên seed phrase. Không cần đăng ký.",
+    opt_create_t:"Tạo ví mới",
+    opt_create_d:"Chúng tôi sẽ tạo seed phrase gồm 24 từ",
+    opt_import_t:"Nhập seed phrase",
+    opt_import_d:"Khôi phục ví có sẵn",
+    back_link:"← quay lại",
+    back_phrase:"← quay lại cụm từ",
+    create_phrase_title:"Seed phrase của bạn",
+    create_phrase_sub:"Hãy ghi lại đủ 24 từ theo đúng thứ tự này và cất ở nơi an toàn.",
+    create_warn:"Đừng chia sẻ cụm từ này với bất kỳ ai — nó cho phép truy cập toàn bộ ví và phần thưởng của bạn. <b>Bạn chỉ thấy nó một lần duy nhất và không thể khôi phục lại.</b>",
+    btn_wrote:"Tôi đã ghi xong — tiếp tục",
+    create_verify_title:"Xác minh",
+    verify_hint_default:"Cùng kiểm tra xem bạn đã ghi đúng cụm từ chưa.",
+    verify_hint:"Nhập các từ ở vị trí {n}.",
+    verify_err:"Các từ không khớp. Kiểm tra lại cụm từ bạn đã ghi.",
+    btn_continue:"Tiếp tục",
+    pass_title:"Mật khẩu bảo vệ",
+    pass_sub:"Dùng khi bạn đăng nhập lại. Tối thiểu 8 ký tự.",
+    lbl_pass:"Mật khẩu",
+    pass_min_err:"Tối thiểu 8 ký tự.",
+    confpass_title:"Xác nhận mật khẩu",
+    confpass_sub:"Nhập mật khẩu một lần nữa.",
+    lbl_pass_repeat:"Nhập lại mật khẩu",
+    pass_mismatch:"Mật khẩu không khớp.",
+    btn_create_wallet:"Tạo ví",
+    import_title:"Nhập seed phrase",
+    import_sub:"Nhập seed phrase 24 từ của bạn (các từ cách nhau bằng dấu cách) để khôi phục ví.",
+    lbl_seed:"Seed phrase (24 từ)",
+    lbl_pass_min:"Mật khẩu (tối thiểu 8 ký tự)",
+    btn_import:"Nhập ví",
+    imp_count_err:"Cần đúng 24 từ (hiện tại là {n}).",
+    imp_passmin_err:"Mật khẩu — tối thiểu 8 ký tự.",
+    confirm_title:"Đã kết nối ví",
+    confirm_sub:"Nhấn “Tham gia ngay” để vào mùa giải. Hoạt động của bạn sẽ bắt đầu được tính cho địa chỉ này.",
+    lbl_wallet_addr:"Địa chỉ ví",
+    lbl_inviter:"Mã người mời · không bắt buộc",
+    ph_ref:"địa chỉ của người đã mời bạn",
+    join_addr_err:"Mã người mời phải là địa chỉ dạng 0:…",
+    join_self_err:"Bạn không thể tự mời chính mình.",
+    btn_logout:"Đăng xuất",
+    cab_title:"Bảng điều khiển",
+    cab_sub:"Chương trình giới thiệu · Shellnet · Season 1",
+    stat_pts:"Số points của bạn",
+    stat_refs:"Lượt giới thiệu",
+    stat_rew:"Thưởng giới thiệu",
+    panel_link_title:"Link giới thiệu của bạn",
+    panel_link_sub:"Chia sẻ link của bạn — khi người được mời kết nối ví và thực hiện giao dịch hoặc tiêu thụ đầu tiên, lượt giới thiệu được tính và points cứ thế chảy về túi bạn.",
+    btn_gen_link:"Tạo link",
+    btn_copy:"Sao chép",
+    panel_refs_title:"Lượt giới thiệu",
+    th_date:"Ngày",
+    th_ref:"Người được mời",
+    th_act:"Hoạt động",
+    th_reward:"Thưởng",
+    empty_loading:"Đang tải…",
+    empty_none:"Chưa mời được ai. Tạo link rồi chia sẻ ngay thôi.",
+    footer_text:"Bản prototype. Xác thực dùng flow của Acki Nacki Wallet (bản production dùng AN Wallet SDK thật). Dữ liệu nằm trong kho lưu trữ chung của artifact; bản production — <b>Next.js + PostgreSQL</b>. Points và phần thưởng là bản giả lập cho hoạt động on-chain.",
+    btn_reset:"reset demo",
+    reset_confirm:"chắc chưa? bấm lần nữa",
+    reset_running:"đang reset…",
+    copied:"Đã sao chép"
+  },
+  fr:{
+    hero_h1:"Accède à l’IA avant le marché<br><span class=\"dim\">Prends ta part</span>",
+    hero_lead:"La saison 1 de Dark Order est live sur Acki Nacki Shellnet. Connecte ton wallet, achète et vends de l’accès à des modèles d’IA, consomme vraiment l’inférence, invite tes amis — ton activité s’accumule en points et se convertit au claim à la fin de la saison.",
+    btn_im_in:"J’en suis →",
+    btn_how:"Comment ça marche",
+    step1_t:"Connecte un wallet",
+    step1_d:"Acki Nacki Wallet — non-custodial, basé sur une seed phrase. Crée-en un nouveau ou importe le tien.",
+    step2_t:"Utilise et invite",
+    step2_d:"Accès aux modèles, consommation réelle, le marché secondaire, parrainages — tout rapporte des points.",
+    step3_t:"Claim",
+    step3_d:"À la fin de la saison, tu révèles ton activité et tu récupères ta récompense lors du claim.",
+    act_title:"Ce qui rapporte des points",
+    act_sub:"La liste complète des actions qui rapportent des points. Les barèmes exacts restent privés — c’est une protection anti-triche. Mais ce qu’on récompense et selon quelles règles, c’est public.",
+    a1_t:"Accès aux modèles",
+    a1_d:"Achète et vends de l’accès à des modèles d’IA dans l’order book — passe des ordres et exécute-les. Ta participation sur différents modèles compte.",
+    a2_t:"Consommation réelle",
+    a2_d:"Consomme vraiment l’inférence que tu as achetée. C’est le signal le plus fort — le plus dur à falsifier.",
+    a3_t:"Marché secondaire et hedge",
+    a3_d:"Prends une position sur le prix d’un modèle ou sur des événements IA — et couvre ton propre coût.",
+    a4_t:"Parrainages",
+    a4_d:"Invite via ton lien. Un filleul est compté dès qu’il se connecte et fait sa première activité.",
+    act_sub2:"Le volume sur Shellnet ne compte pas — les tokens sont en testnet. Le volume de consommation et le market-making arriveront sur le mainnet.",
+    rules_eyebrow:"Règles",
+    rules_title:"Règles de la saison",
+    rule1:"<b>La Saison 1 se déroule sur Shellnet (testnet).</b> <span>Les points sont provisoires.</span>",
+    rule2:"<b>Les récompenses sont payées en token NACKL.</b> <span>Au lancement du mainnet, les points sont convertis en allocation NACKL.</span>",
+    rule3:"<b>Pour toucher ta récompense — claim à la fin de la saison.</b> <span>Tu retires vers un wallet public et tu confirmes que c’est bien le tien.</span>",
+    rule4:"<b>Les barèmes exacts des points restent privés.</b> <span>C’est une protection anti-triche. La liste des actions et les règles de la saison sont publiques.</span>",
+    rule5:"<b>Les règles ne changent pas rétroactivement</b> <span>au détriment des participants.</span>",
+    rule6:"<b>La triche est éliminée.</b> <span>Le self-trading et les multi-comptes ne comptent pas — vérification au claim.</span>",
+    rule7:"<b>Les actions ont des limites</b> <span>— pour tenir les bots à l’écart.</span>",
+    connect_title:"Connecter un wallet",
+    connect_sub:"La Saison 1 se déroule sur Acki Nacki Shellnet. Elle utilise le wallet Acki Nacki — non-custodial, basé sur une seed phrase. Aucune inscription requise.",
+    opt_create_t:"Créer un nouveau wallet",
+    opt_create_d:"On génère une seed phrase de 24 mots",
+    opt_import_t:"Importer une seed phrase",
+    opt_import_d:"Restaurer un wallet existant",
+    back_link:"← retour",
+    back_phrase:"← retour à la phrase",
+    create_phrase_title:"Ta seed phrase",
+    create_phrase_sub:"Note les 24 mots dans cet ordre et garde-les en lieu sûr.",
+    create_warn:"Ne partage la phrase avec personne — elle donne un accès total à ton wallet et à tes récompenses. <b>Tu ne la verras qu’une seule fois et tu ne pourras pas la récupérer.</b>",
+    btn_wrote:"C’est noté — continuer",
+    create_verify_title:"Vérification",
+    verify_hint_default:"Vérifions que la phrase est bien notée.",
+    verify_hint:"Saisis les mots aux positions {n}.",
+    verify_err:"Les mots ne correspondent pas. Vérifie la phrase que tu as notée.",
+    btn_continue:"Continuer",
+    pass_title:"Choisis un mot de passe",
+    pass_sub:"Utilisé pour te reconnecter. 8 caractères minimum.",
+    lbl_pass:"Mot de passe",
+    pass_min_err:"8 caractères minimum.",
+    confpass_title:"Confirme le mot de passe",
+    confpass_sub:"Saisis à nouveau ton mot de passe.",
+    lbl_pass_repeat:"Répéter le mot de passe",
+    pass_mismatch:"Les mots de passe ne correspondent pas.",
+    btn_create_wallet:"Créer le wallet",
+    import_title:"Importer une seed phrase",
+    import_sub:"Saisis ta seed phrase de 24 mots séparés par des espaces pour restaurer ton wallet.",
+    lbl_seed:"Seed phrase (24 mots)",
+    lbl_pass_min:"Mot de passe (min. 8 caractères)",
+    btn_import:"Importer",
+    imp_count_err:"Il faut exactement 24 mots (actuellement {n}).",
+    imp_passmin_err:"Mot de passe — 8 caractères minimum.",
+    confirm_title:"Wallet connecté",
+    confirm_sub:"Appuie sur « J’en suis » pour entrer dans la saison. Ton activité commencera à être comptabilisée sur cette adresse.",
+    lbl_wallet_addr:"Adresse du wallet",
+    lbl_inviter:"Code du parrain · facultatif",
+    ph_ref:"adresse de la personne qui t’a invité",
+    join_addr_err:"Le code du parrain doit être une adresse 0:…",
+    join_self_err:"Tu ne peux pas t’inviter toi-même.",
+    btn_logout:"Déconnexion",
+    cab_title:"Tableau de bord",
+    cab_sub:"Programme de parrainage · Shellnet · Season 1",
+    stat_pts:"Tes points",
+    stat_refs:"Filleuls",
+    stat_rew:"Récompenses de parrainage",
+    panel_link_title:"Ton lien de parrainage",
+    panel_link_sub:"Partage ton lien — quand un invité connecte un wallet et fait sa première opération ou consommation, le parrainage est compté et tu gagnes des points.",
+    btn_gen_link:"Générer le lien",
+    btn_copy:"Copier",
+    panel_refs_title:"Filleuls",
+    th_date:"Date",
+    th_ref:"Filleul",
+    th_act:"Activité",
+    th_reward:"Récompense",
+    empty_loading:"Chargement…",
+    empty_none:"Aucun filleul pour l’instant. Génère un lien et partage-le.",
+    footer_text:"Prototype. L’authentification utilise le flow Acki Nacki Wallet (vrai AN Wallet SDK en production). Les données sont dans le stockage partagé de l’artefact ; en production — <b>Next.js + PostgreSQL</b>. Les points et les récompenses sont un placeholder pour l’activité on-chain.",
+    btn_reset:"réinitialiser la démo",
+    reset_confirm:"sûr ? clique encore",
+    reset_running:"réinitialisation…",
+    copied:"Copié"
+  },
+  ja:{
+    hero_h1:"市場の一歩先で AI を確保<br><span class=\"dim\">自分の取り分をつかみ取ろう</span>",
+    hero_lead:"Dark Orderのシーズン1がAcki Nacki Shellnetで開催中です。ウォレットを接続して、AIモデルへのアクセスを売買し、買った推論を実際に消費し、友達を招待しましょう——アクティビティはpointsとして貯まり、シーズン終了時のclaimで報酬に変換されます。",
+    btn_im_in:"参加する →",
+    btn_how:"仕組みを見る",
+    step1_t:"ウォレットを接続",
+    step1_d:"Acki Nacki Walletはseedフレーズ方式のノンカストディアルウォレット。新規作成かインポートを選べます。",
+    step2_t:"使って招待",
+    step2_d:"モデルへのアクセス、実際の消費、二次市場、リファラル——すべてがpointsになります。",
+    step3_t:"Claim",
+    step3_d:"シーズン終了時にアクティビティを公開して、報酬をclaimします。",
+    act_title:"pointsが貯まるアクション",
+    act_sub:"pointsが付与されるアクションの全リストです。正確な配点は非公開——不正対策のためです。ただし、何に対してどんなルールでpointsを付与するかは公開しています。",
+    a1_t:"モデルへのアクセス",
+    a1_d:"order bookでAIモデルへのアクセスを売買しましょう——注文を出して約定させます。複数のモデルへの参加がカウントされます。",
+    a2_t:"実際の消費",
+    a2_d:"買った推論を実際に消費しましょう。最も重みのあるシグナルです——最も偽装しにくいからです。",
+    a3_t:"二次市場とヘッジ",
+    a3_d:"モデルの価格やAIイベントにポジションを取り——自分のコストをヘッジしましょう。",
+    a4_t:"リファラル",
+    a4_d:"自分のリンクから招待しましょう。招待された人がウォレットを接続して最初のアクティビティを行うと、リファラルとしてカウントされます。",
+    act_sub2:"Shellnetでの数量はカウントされません——トークンはtestnet用のためです。消費量とmarket-makingはmainnetで追加予定です。",
+    rules_eyebrow:"ルール",
+    rules_title:"シーズンのルール",
+    rule1:"<b>シーズン1はShellnet（testnet）で開催されます。</b><span>pointsは暫定的なものです。</span>",
+    rule2:"<b>報酬はNACKLトークンで支払われます。</b><span>mainnetローンチ時に、pointsはNACKLのアロケーションに変換されます。</span>",
+    rule3:"<b>報酬の受け取りには、シーズン終了時のclaimが必要です。</b><span>公開ウォレットに引き出して、所有権を確認します。</span>",
+    rule4:"<b>正確な配点は非公開です。</b><span>不正対策のためです。アクションのリストとシーズンのルールは公開されています。</span>",
+    rule5:"<b>ルールが遡って変更されることはありません</b><span>——参加者に不利な方向には。</span>",
+    rule6:"<b>不正行為は除外されます。</b><span>自己取引や複数アカウントはカウントされません——claim時に検証します。</span>",
+    rule7:"<b>アクションには上限があります</b><span>——ボット対策です。</span>",
+    connect_title:"ウォレットを接続",
+    connect_sub:"シーズン1はAcki Nacki Shellnetで開催中です。使用するのはAcki Nackiウォレット——seedフレーズ方式のノンカストディアル型です。登録は不要です。",
+    opt_create_t:"新しいウォレットを作成",
+    opt_create_d:"24単語のseedフレーズを生成します",
+    opt_import_t:"seedフレーズをインポート",
+    opt_import_d:"既存のウォレットを復元します",
+    back_link:"← 戻る",
+    back_phrase:"← フレーズに戻る",
+    create_phrase_title:"あなたのseedフレーズ",
+    create_phrase_sub:"24単語すべてをこの順番で書き留めて、安全な場所に保管してください。",
+    create_warn:"フレーズは誰にも教えないでください——ウォレットと報酬への完全なアクセスを与えてしまいます。<b>表示されるのは一度だけで、復元はできません。</b>",
+    btn_wrote:"書き留めました——続行",
+    create_verify_title:"確認",
+    verify_hint_default:"フレーズが正しく書き留められたか確認しましょう。",
+    verify_hint:"{n}番目の単語を入力してください。",
+    verify_err:"単語が一致しません。書き留めたフレーズを確認してください。",
+    btn_continue:"続行",
+    pass_title:"保護用パスワード",
+    pass_sub:"再ログイン時に使用します。8文字以上で設定してください。",
+    lbl_pass:"パスワード",
+    pass_min_err:"8文字以上で入力してください。",
+    confpass_title:"パスワードの確認",
+    confpass_sub:"パスワードをもう一度入力してください。",
+    lbl_pass_repeat:"パスワード（再入力）",
+    pass_mismatch:"パスワードが一致しません。",
+    btn_create_wallet:"ウォレットを作成",
+    import_title:"seedフレーズのインポート",
+    import_sub:"ウォレットを復元するには、24単語のseedフレーズをスペース区切りで入力してください。",
+    lbl_seed:"seedフレーズ（24単語）",
+    lbl_pass_min:"パスワード（8文字以上）",
+    btn_import:"インポート",
+    imp_count_err:"ちょうど24単語が必要です（現在は{n}単語）。",
+    imp_passmin_err:"パスワードは8文字以上で入力してください。",
+    confirm_title:"ウォレットを接続しました",
+    confirm_sub:"「参加する」をタップしてシーズンに参加しましょう。このアドレスでアクティビティのカウントが始まります。",
+    lbl_wallet_addr:"ウォレットアドレス",
+    lbl_inviter:"招待者コード（任意）",
+    ph_ref:"あなたを招待した人のアドレス",
+    join_addr_err:"招待者コードは0:…形式のアドレスである必要があります。",
+    join_self_err:"自分自身は招待できません。",
+    btn_logout:"ログアウト",
+    cab_title:"ダッシュボード",
+    cab_sub:"リファラルプログラム・Shellnet・Season 1",
+    stat_pts:"あなたのpoints",
+    stat_refs:"リファラル数",
+    stat_rew:"リファラル報酬",
+    panel_link_title:"あなたのリファラルリンク",
+    panel_link_sub:"リンクをシェアしましょう——招待された人がウォレットを接続して最初の取引や消費を行うと、リファラルとしてカウントされ、あなたにpointsが入ります。",
+    btn_gen_link:"リンクを生成",
+    btn_copy:"コピー",
+    panel_refs_title:"リファラル",
+    th_date:"日付",
+    th_ref:"リファラル",
+    th_act:"アクティビティ",
+    th_reward:"報酬",
+    empty_loading:"読み込み中…",
+    empty_none:"まだ誰も招待していません。リンクを生成してシェアしましょう。",
+    footer_text:"プロトタイプです。認証はAcki Nacki Walletのフローを使用（本番環境では実際のAN Wallet SDK）。データはアーティファクトの共有ストレージに保存——本番環境では<b>Next.js + PostgreSQL</b>を使用します。pointsと報酬はオンチェーンアクティビティのスタブです。",
+    btn_reset:"デモをリセット",
+    reset_confirm:"本当に？もう一度クリック",
+    reset_running:"リセット中…",
+    copied:"コピーしました"
+  },
+  de:{
+    hero_h1:"Sichere dir KI vor dem Markt<br><span class=\"dim\">Hol dir deinen Anteil</span>",
+    hero_lead:"Dark Order Season 1 ist live auf dem Acki Nacki Shellnet. Verbinde dein Wallet, kaufe und verkaufe Zugang zu KI-Modellen, verbrauche die Inferenz wirklich, lade Freunde ein — deine Aktivität sammelt sich als points und wird beim claim am Ende der Saison umgewandelt.",
+    btn_im_in:"Ich bin dabei →",
+    btn_how:"So funktioniert's",
+    step1_t:"Wallet verbinden",
+    step1_d:"Acki Nacki Wallet — non-custodial, basiert auf einer Seed-Phrase. Erstell ein neues oder importiere eins.",
+    step2_t:"Nutzen und einladen",
+    step2_d:"Modellzugang, echter Verbrauch, der Sekundärmarkt, Referrals — alles bringt points.",
+    step3_t:"Claim",
+    step3_d:"Am Ende der Saison legst du deine Aktivität offen und claimst deine Belohnung.",
+    act_title:"Was points bringt",
+    act_sub:"Die vollständige Liste der Aktionen, die points bringen. Die genaue Gewichtung bleibt geheim — das ist Schutz gegen Manipulation. Aber wofür es points gibt und nach welchen Regeln, legen wir offen.",
+    a1_t:"Modellzugang",
+    a1_d:"Kaufe und verkaufe Zugang zu KI-Modellen im order book — platziere Orders und fülle sie. Die Teilnahme an verschiedenen Modellen zählt.",
+    a2_t:"Echter Verbrauch",
+    a2_d:"Verbrauche die Inferenz, die du gekauft hast, wirklich. Das ist das stärkste Signal — am schwersten zu fälschen.",
+    a3_t:"Sekundärmarkt und Hedge",
+    a3_d:"Nimm eine Position auf den Preis eines Modells oder auf KI-Ereignisse ein — und hedge deine eigenen Kosten.",
+    a4_t:"Referrals",
+    a4_d:"Lade über deinen Link ein. Ein Referral zählt, sobald die Person ihr Wallet verbunden und ihre erste Aktivität gemacht hat.",
+    act_sub2:"Volumen auf dem Shellnet zählt nicht — es sind testnet-Token. Verbrauchsvolumen und market-making kommen mit dem mainnet dazu.",
+    rules_eyebrow:"Regeln",
+    rules_title:"Saisonregeln",
+    rule1:"<b>Season 1 läuft auf dem Shellnet (testnet).</b> <span>Points sind vorläufig.</span>",
+    rule2:"<b>Belohnungen werden im NACKL-Token ausgezahlt.</b> <span>Beim mainnet-Launch werden points in eine NACKL-Allokation umgewandelt.</span>",
+    rule3:"<b>Für deine Belohnung — claim am Ende der Saison.</b> <span>Du zahlst dein Guthaben auf ein öffentliches Wallet aus und bestätigst die Inhaberschaft.</span>",
+    rule4:"<b>Die genaue points-Gewichtung ist geheim.</b> <span>Das ist Schutz gegen Manipulation. Die Liste der Aktionen und die Saisonregeln sind öffentlich.</span>",
+    rule5:"<b>Regeln ändern sich nicht rückwirkend</b> <span>zum Nachteil der Teilnehmer.</span>",
+    rule6:"<b>Manipulation wird rausgefiltert.</b> <span>Self-Trading und Multi-Accounts zählen nicht — das prüfen wir beim claim.</span>",
+    rule7:"<b>Für Aktionen gelten Limits</b> <span>— gegen Bots.</span>",
+    connect_title:"Wallet verbinden",
+    connect_sub:"Season 1 läuft auf dem Acki Nacki Shellnet. Genutzt wird das Acki Nacki Wallet — non-custodial, basiert auf einer Seed-Phrase. Keine Registrierung nötig.",
+    opt_create_t:"Neues Wallet erstellen",
+    opt_create_d:"Wir generieren eine Seed-Phrase aus 24 Wörtern",
+    opt_import_t:"Seed-Phrase importieren",
+    opt_import_d:"Bestehendes Wallet wiederherstellen",
+    back_link:"← zurück",
+    back_phrase:"← zur Phrase",
+    create_phrase_title:"Deine Seed-Phrase",
+    create_phrase_sub:"Schreib alle 24 Wörter in dieser Reihenfolge auf und bewahre sie an einem sicheren Ort auf.",
+    create_warn:"Teile die Phrase mit niemandem — sie gibt vollen Zugriff auf dein Wallet und deine Belohnungen. <b>Du siehst sie nur ein einziges Mal und kannst sie nicht wiederherstellen.</b>",
+    btn_wrote:"Hab ich notiert — weiter",
+    create_verify_title:"Überprüfung",
+    verify_hint_default:"Kurz checken, ob du die Phrase richtig notiert hast.",
+    verify_hint:"Gib die Wörter an den Positionen {n} ein.",
+    verify_err:"Die Wörter stimmen nicht überein. Prüf deine notierte Phrase.",
+    btn_continue:"Weiter",
+    pass_title:"Sicherheitspasswort",
+    pass_sub:"Wird beim erneuten Einloggen genutzt. Mindestens 8 Zeichen.",
+    lbl_pass:"Passwort",
+    pass_min_err:"Mindestens 8 Zeichen.",
+    confpass_title:"Passwort bestätigen",
+    confpass_sub:"Gib das Passwort noch einmal ein.",
+    lbl_pass_repeat:"Passwort wiederholen",
+    pass_mismatch:"Die Passwörter stimmen nicht überein.",
+    btn_create_wallet:"Wallet erstellen",
+    import_title:"Seed-Phrase importieren",
+    import_sub:"Gib deine Seed-Phrase aus 24 Wörtern durch Leerzeichen getrennt ein, um dein Wallet wiederherzustellen.",
+    lbl_seed:"Seed-Phrase (24 Wörter)",
+    lbl_pass_min:"Passwort (min. 8 Zeichen)",
+    btn_import:"Importieren",
+    imp_count_err:"Es müssen genau 24 Wörter sein (aktuell {n}).",
+    imp_passmin_err:"Passwort — mindestens 8 Zeichen.",
+    confirm_title:"Wallet verbunden",
+    confirm_sub:"Tippe auf „Ich bin dabei“, um in die Saison einzusteigen. Deine Aktivität zählt ab jetzt für diese Adresse.",
+    lbl_wallet_addr:"Wallet-Adresse",
+    lbl_inviter:"Einladungscode · optional",
+    ph_ref:"Adresse der Person, die dich eingeladen hat",
+    join_addr_err:"Der Einladungscode muss eine 0:…-Adresse sein.",
+    join_self_err:"Du kannst dich nicht selbst einladen.",
+    btn_logout:"Abmelden",
+    cab_title:"Dashboard",
+    cab_sub:"Referral-Programm · Shellnet · Season 1",
+    stat_pts:"Deine points",
+    stat_refs:"Referrals",
+    stat_rew:"Referral-Belohnungen",
+    panel_link_title:"Dein Referral-Link",
+    panel_link_sub:"Teile deinen Link — sobald die eingeladene Person ein Wallet verbindet und ihre erste Transaktion oder ihren ersten Verbrauch macht, zählt das Referral und du kassierst points.",
+    btn_gen_link:"Link generieren",
+    btn_copy:"Kopieren",
+    panel_refs_title:"Referrals",
+    th_date:"Datum",
+    th_ref:"Referral",
+    th_act:"Aktivität",
+    th_reward:"Belohnung",
+    empty_loading:"Lädt…",
+    empty_none:"Noch keine Referrals. Generier einen Link und teile ihn.",
+    footer_text:"Prototyp. Auth nutzt den Acki Nacki Wallet Flow (in Produktion das echte AN Wallet SDK). Die Daten liegen im geteilten Artefakt-Storage; in Produktion — <b>Next.js + PostgreSQL</b>. Points und Belohnungen sind ein Platzhalter für On-Chain-Aktivität.",
+    btn_reset:"demo zurücksetzen",
+    reset_confirm:"sicher? nochmal klicken",
+    reset_running:"wird zurückgesetzt…",
+    copied:"Kopiert"
+  }
+};
+function t(k){var o=T[currentLang]||T.ru;return (o[k]!==undefined)?o[k]:((T.ru[k]!==undefined)?T.ru[k]:k);}
+function applyLang(l){
+  currentLang=(LANGS.indexOf(l)>-1)?l:'en';
+  try{localStorage.setItem(LANG_KEY,currentLang);}catch(e){}
+  document.documentElement.lang=currentLang;
+  document.querySelectorAll('[data-i18n]').forEach(function(e){var k=e.getAttribute('data-i18n');var v=t(k);if(v!==undefined)e.innerHTML=v;});
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(e){var k=e.getAttribute('data-i18n-ph');var v=t(k);if(v!==undefined)e.setAttribute('placeholder',v);});
+  syncLangDds();
+  // dynamic re-render
+  try{if(VERIFY_IDX&&VERIFY_IDX.length){$('#verifyHint').textContent=t('verify_hint').replace('{n}',VERIFY_IDX.join(', '));}else{$('#verifyHint').textContent=t('verify_hint_default');}}catch(e){}
+  try{var cab=document.getElementById('scr-cabinet');if(cab&&!cab.classList.contains('hidden')&&CUR_REC)refreshCabinet();}catch(e){}
+}
+/* ============ language dropdown (SVG flags) ============ */
+const LANG_NAMES={ru:'Русский',en:'English',zh:'中文',es:'Español',ko:'한국어',tr:'Türkçe',pt:'Português',vi:'Tiếng Việt',fr:'Français',ja:'日本語',de:'Deutsch'};
+const FSTAR='M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z';
+function fstar(x,y,s,f){return '<path d="'+FSTAR+'" transform="translate('+x+','+y+') scale('+s+')" fill="'+f+'"/>';}
+const FLAGS={
+  ru:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="6.67" width="30" height="13.33" fill="#0039a6"/><rect y="13.33" width="30" height="6.67" fill="#d52b1e"/></svg>',
+  en:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><g fill="#b22234"><rect width="30" height="1.54"/><rect y="3.08" width="30" height="1.54"/><rect y="6.15" width="30" height="1.54"/><rect y="9.23" width="30" height="1.54"/><rect y="12.31" width="30" height="1.54"/><rect y="15.38" width="30" height="1.54"/><rect y="18.46" width="30" height="1.54"/></g><rect width="12" height="10.77" fill="#3c3b6e"/><g fill="#fff"><circle cx="2" cy="1.9" r=".6"/><circle cx="4.7" cy="1.9" r=".6"/><circle cx="7.4" cy="1.9" r=".6"/><circle cx="10.1" cy="1.9" r=".6"/><circle cx="3.3" cy="4.2" r=".6"/><circle cx="6" cy="4.2" r=".6"/><circle cx="8.7" cy="4.2" r=".6"/><circle cx="2" cy="6.5" r=".6"/><circle cx="4.7" cy="6.5" r=".6"/><circle cx="7.4" cy="6.5" r=".6"/><circle cx="10.1" cy="6.5" r=".6"/><circle cx="3.3" cy="8.8" r=".6"/><circle cx="6" cy="8.8" r=".6"/><circle cx="8.7" cy="8.8" r=".6"/></g></svg>',
+  zh:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#de2910"/>'+'STARS'+'</svg>',
+  es:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#aa151b"/><rect y="5" width="30" height="10" fill="#f1bf00"/></svg>',
+  ko:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#0047a0"/><path d="M9,10 A6,6 0 0,1 21,10 A3,3 0 0,1 15,10 A3,3 0 0,0 9,10 Z" fill="#cd2e3a"/></svg>',
+  tr:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#e30a17"/><circle cx="10" cy="10" r="5" fill="#fff"/><circle cx="11.2" cy="10" r="4" fill="#e30a17"/>'+'TRSTAR'+'</svg>',
+  pt:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#009b3a"/><path d="M15,2.5 L27,10 L15,17.5 L3,10 Z" fill="#fedf00"/><circle cx="15" cy="10" r="5.2" fill="#002776"/><path d="M10.4,11.7 Q15,8.2 19.7,9.2" stroke="#fff" stroke-width="1.1" fill="none"/></svg>',
+  vi:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#da251d"/>'+'VISTAR'+'</svg>',
+  fr:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#0055a4"/><rect x="20" width="10" height="20" fill="#ef4135"/></svg>',
+  ja:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></svg>',
+  de:'<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#000"/><rect y="6.67" width="30" height="13.33" fill="#dd0000"/><rect y="13.33" width="30" height="6.67" fill="#ffce00"/></svg>'
+};
+FLAGS.zh=FLAGS.zh.replace('STARS',fstar(5,5,3,'#ffde00')+fstar(10,2,1,'#ffde00')+fstar(12,4,1,'#ffde00')+fstar(12,7,1,'#ffde00')+fstar(10,9,1,'#ffde00'));
+FLAGS.tr=FLAGS.tr.replace('TRSTAR',fstar(17.5,10,2.2,'#fff'));
+FLAGS.vi=FLAGS.vi.replace('VISTAR',fstar(15,10,6,'#ffff00'));
+function flagHtml(c){return '<span class="flag">'+(FLAGS[c]||'')+'</span>';}
+function closeLangDds(){document.querySelectorAll('.lang-dd.open').forEach(function(d){d.classList.remove('open');var b=d.querySelector('.lang-btn');if(b)b.setAttribute('aria-expanded','false');});}
+function syncLangDds(){
+  document.querySelectorAll('.lang-dd').forEach(function(dd){
+    var btn=dd.querySelector('.lang-btn');if(!btn)return;
+    btn.innerHTML=flagHtml(currentLang)+'<span class="lang-cur">'+LANG_NAMES[currentLang]+'</span><span class="chev">▾</span>';
+    dd.querySelectorAll('.lang-item').forEach(function(it){it.classList.toggle('on',it.getAttribute('data-lang')===currentLang);});
+  });
+}
+function initLangDds(){
+  document.querySelectorAll('.lang-dd').forEach(function(dd){
+    dd.innerHTML='<button type="button" class="lang-btn" aria-haspopup="listbox" aria-expanded="false"></button>'
+      +'<div class="lang-menu" role="listbox">'+LANGS.map(function(c){return '<button type="button" class="lang-item" role="option" data-lang="'+c+'">'+flagHtml(c)+'<span>'+LANG_NAMES[c]+'</span></button>';}).join('')+'</div>';
+    dd.querySelector('.lang-btn').addEventListener('click',function(ev){ev.stopPropagation();var open=dd.classList.contains('open');closeLangDds();if(!open){dd.classList.add('open');this.setAttribute('aria-expanded','true');}});
+    dd.querySelectorAll('.lang-item').forEach(function(it){it.addEventListener('click',function(ev){ev.stopPropagation();closeLangDds();applyLang(it.getAttribute('data-lang'));});});
+  });
+  document.addEventListener('click',closeLangDds);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLangDds();});
+}
+initLangDds();
+
+/* ============ storage ============ */
+const PKEY='participant:', SEEDFLAG='__dexdo_seed_v1__', REF_BONUS=10;
+async function sGet(k,sh){try{const r=await window.storage.get(k,sh);return r?r.value:null;}catch(e){return null;}}
+async function sSet(k,v,sh){try{await window.storage.set(k,v,sh);}catch(e){}}
+async function sDel(k,sh){try{await window.storage.delete(k,sh);}catch(e){}}
+async function sList(p,sh){try{const r=await window.storage.list(p,sh);return r?r.keys:[];}catch(e){return [];}}
+
+/* ============ utils ============ */
+const $=s=>document.querySelector(s);
+const short=a=>!a?'0:—':(a.length>16?a.slice(0,6)+'…'+a.slice(-4):a);
+const shortHash=a=>!a?'—':a.replace('0:','').slice(0,8);
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));$('#'+id).classList.remove('hidden');window.scrollTo(0,0);}
+
+const WORDS='abandon ability able about above absorb abstract access account achieve acid across action actor adapt add adjust admit adult advance advice agent agree ahead air alarm album alert alien alpha amount anchor angle animal ankle apple april arch area armor army arrow art aspect asset atom august autumn average awake axis bacon badge balance bamboo banner basic beach beauty before begin behave below bench bridge bright bronze budget bundle cabin cable cactus candle canyon carbon castle cattle cement census chaos charge cherry circle clarify clay client cliff climb cloud cluster coast cobalt comfort copper coral cosmos cotton course coyote crane crater credit crystal'.split(' ');
+let SEED=[], VERIFY_IDX=[], PASS='', CUR_REC=null;
+
+function genSeed(){const a=[];for(let i=0;i<24;i++)a.push(WORDS[(Math.random()*WORDS.length)|0]);return a;}
+function addrFromSeed(seed){let h=2166136261>>>0,out='';const s=seed.join(' ');for(let k=0;k<48;k++){for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}h=(h+k*2654435761)>>>0;out+=(h&0xf).toString(16);}return '0:'+out;}
+function refLink(a){return 'https://dex.do/?ref='+a;}
+function validAddr(a){return /^0:[0-9a-fA-F]{6,}$/.test((a||'').trim());}
+
+/* ============ create flow ============ */
+function startCreate(){
+  SEED=genSeed();
+  $('#seedgrid').innerHTML=SEED.map((w,i)=>`<div class="word"><span class="wn">${i+1}.</span><span class="ww">${w}</span></div>`).join('');
+  ['cs-verify','cs-pass','cs-conf'].forEach(x=>$('#'+x).classList.add('hidden'));
+  $('#cs-phrase').classList.remove('hidden');
+  go('scr-create');
+}
+function backToPhrase(){$('#cs-verify').classList.add('hidden');$('#cs-phrase').classList.remove('hidden');}
+function toVerify(){
+  const set=new Set();while(set.size<3)set.add(((Math.random()*24)|0)+1);
+  VERIFY_IDX=[...set].sort((a,b)=>a-b);
+  $('#verifyHint').textContent=t('verify_hint').replace('{n}',VERIFY_IDX.join(', '));
+  $('#verifyRow').innerHTML=VERIFY_IDX.map((n,i)=>`<div class="vcell"><label>${n}.</label><input class="field vw" data-i="${i}" autocomplete="off" spellcheck="false"></div>`).join('');
+  $('#verifyErr').textContent='';
+  $('#cs-phrase').classList.add('hidden');$('#cs-verify').classList.remove('hidden');
+}
+function checkVerify(){
+  const ins=[...document.querySelectorAll('.vw')];
+  const ok=VERIFY_IDX.every((n,i)=>(ins[i].value||'').trim().toLowerCase()===SEED[n-1]);
+  if(!ok){$('#verifyErr').textContent=t('verify_err');return;}
+  $('#cs-verify').classList.add('hidden');$('#cs-pass').classList.remove('hidden');
+}
+function toConfirmPass(){
+  const p=$('#pass1').value;
+  if(p.length<8){$('#passErr').textContent=t('pass_min_err');return;}
+  $('#passErr').textContent='';PASS=p;
+  $('#cs-pass').classList.add('hidden');$('#cs-conf').classList.remove('hidden');
+}
+async function finishCreate(){
+  if($('#pass2').value!==PASS){$('#confErr').textContent=t('pass_mismatch');return;}
+  const addr=addrFromSeed(SEED);
+  await sSet('wallet',{address:addr,createdAt:Date.now()},false);
+  showConfirm(addr);
+}
+
+/* ============ import flow ============ */
+async function finishImport(){
+  const words=$('#impPhrase').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if(words.length!==24){$('#impErr').textContent=t('imp_count_err').replace('{n}',words.length);return;}
+  if($('#impPass').value.length<8){$('#impErr').textContent=t('imp_passmin_err');return;}
+  $('#impErr').textContent='';
+  const addr=addrFromSeed(words);
+  await sSet('wallet',{address:addr,createdAt:Date.now()},false);
+  showConfirm(addr);
+}
+
+/* ============ confirm + join ============ */
+let CUR_ADDR=null;
+function showConfirm(addr){CUR_ADDR=addr;$('#confAddr').textContent=addr;
+  try{const p=new URLSearchParams(location.search).get('ref');if(p)$('#refIn').value=p;}catch(e){}
+  go('scr-confirm');}
+
+async function joinSeason(){
+  const addr=CUR_ADDR;const ref=$('#refIn').value.trim();
+  if(ref&&!validAddr(ref)){$('#confJoinErr').textContent=t('join_addr_err');return;}
+  if(ref&&ref===addr){$('#confJoinErr').textContent=t('join_self_err');return;}
+
+  let rec=await sGet(PKEY+addr,true);
+  const fresh=!rec;
+  if(fresh){
+    rec={address:addr,joinedAt:Date.now(),points:0,refBy:null,referrals:[]};
+    const demo=[{d:34,act:1840,r:64},{d:51,act:760,r:28},{d:72,act:410,r:15}];
+    rec.referrals=demo.map(x=>({ts:Date.now()-x.d*36e5,addr:'0:'+Math.random().toString(16).slice(2,18),act:x.act,reward:x.r}));
+    rec.points=rec.referrals.reduce((s,x)=>s+x.reward,0);
+  }
+  if(fresh&&ref){
+    const rr=await sGet(PKEY+ref,true);
+    if(rr){rec.refBy=ref;
+      rr.referrals=rr.referrals||[];
+      rr.referrals.unshift({ts:Date.now(),addr:addr,act:0,reward:REF_BONUS});
+      rr.points=(rr.points||0)+REF_BONUS;
+      await sSet(PKEY+ref,rr,true);
+    }
+  }
+  await sSet(PKEY+addr,rec,true);
+  enterCabinet(rec);
+}
+
+/* ============ cabinet ============ */
+function enterCabinet(rec){
+  CUR_REC=rec;
+  $('#cabAddrShort').textContent=short(rec.address);
+  $('#linkShowWrap').classList.add('hidden');$('#linkGenWrap').classList.remove('hidden');
+  refreshCabinet();
+  go('scr-cabinet');
+}
+function refreshCabinet(){
+  if(!CUR_REC)return;
+  const refs=CUR_REC.referrals||[];
+  $('#stPts').textContent=(CUR_REC.points||0).toLocaleString(loc());
+  $('#stRefs').textContent=refs.length;
+  $('#stRew').textContent=refs.reduce((s,x)=>s+(x.reward||0),0).toLocaleString(loc());
+  renderRefTable(refs);
+}
+function renderRefTable(refs){
+  const el=$('#reftable');
+  const head='<div class="rhead">'+t('th_date')+'</div><div class="rhead">'+t('th_ref')+'</div><div class="rhead r">'+t('th_act')+'</div><div class="rhead r">'+t('th_reward')+'</div>';
+  if(!refs||!refs.length){el.innerHTML=head+'<div class="empty">'+t('empty_none')+'</div>';return;}
+  const rows=refs.map(x=>{
+    const d=new Date(x.ts).toLocaleString(loc(),{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    return `<div class="rrow"><div class="date">${d}</div><div class="raddr">${shortHash(x.addr)}</div><div class="act">${(x.act||0).toLocaleString(loc())} pts</div><div class="rew">+${x.reward||0}</div></div>`;
+  }).join('');
+  el.innerHTML=head+rows;
+}
+function genLink(){
+  $('#refLink').value=refLink(CUR_ADDR);
+  $('#linkGenWrap').classList.add('hidden');
+  $('#linkShowWrap').classList.remove('hidden');
+}
+
+/* ============ copy / logout / reset ============ */
+async function copyText(txt,btn,okLabel,defLabel){
+  try{await navigator.clipboard.writeText(txt);}catch(e){}
+  if(btn){const o=btn.textContent;btn.textContent=okLabel;btn.classList.add('ok');setTimeout(()=>{btn.textContent=defLabel||o;btn.classList.remove('ok');},1500);}
+}
+$('#cpLink').addEventListener('click',()=>copyText($('#refLink').value,$('#cpLink'),t('copied'),t('btn_copy')));
+$('#cabCopyAddr').addEventListener('click',()=>copyText(CUR_ADDR||'',$('#cabCopyAddr'),'✓','⧉'));
+
+async function logout(){await sDel('wallet',false);CUR_ADDR=null;CUR_REC=null;SEED=[];PASS='';
+  $('#impPhrase').value='';$('#impPass').value='';$('#pass1').value='';$('#pass2').value='';$('#refIn').value='';
+  go('scr-landing');}
+
+let armed=false,at=null;
+$('#resetBtn').addEventListener('click',async()=>{
+  const b=$('#resetBtn');
+  if(!armed){armed=true;b.textContent=t('reset_confirm');at=setTimeout(()=>{armed=false;b.textContent=t('btn_reset');},2500);return;}
+  clearTimeout(at);armed=false;b.textContent=t('reset_running');
+  const keys=await sList(PKEY,true);for(const k of keys)await sDel(k,true);
+  await sDel('wallet',false);await sDel(SEEDFLAG,true);
+  CUR_ADDR=null;CUR_REC=null;go('scr-landing');b.textContent=t('btn_reset');
+});
+
+/* ============ boot ============ */
+async function boot(){
+  applyLang(currentLang);
+  const w=await sGet('wallet',false);
+  if(w&&w.address){
+    let rec=await sGet(PKEY+w.address,true);
+    if(rec){CUR_ADDR=w.address;enterCabinet(rec);return;}
+    showConfirm(w.address);return;
+  }
+}
+boot();
+</script>
+</body>
+</html>
