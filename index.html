@@ -36,6 +36,10 @@
   .btn-ghost{background:transparent;color:var(--text);border-color:var(--line2)}
   .btn-ghost:hover{border-color:var(--muted)}
   .btn-sm{padding:8px 14px;font-size:13.5px}
+  .btn-season{background:rgba(106,160,255,.12);color:var(--accent);border-color:var(--accent);animation:seasonPulse 2.4s ease-in-out infinite}
+  .btn-season:hover{background:rgba(106,160,255,.22);border-color:#8ab4ff;color:#fff}
+  @keyframes seasonPulse{0%,100%{box-shadow:0 0 0 1px rgba(106,160,255,.25),0 0 16px -8px rgba(106,160,255,.55)}50%{box-shadow:0 0 0 1px rgba(106,160,255,.5),0 0 22px -4px rgba(106,160,255,.9)}}
+  @media (prefers-reduced-motion: reduce){.btn-season{animation:none;box-shadow:0 0 0 1px rgba(106,160,255,.35)}}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
 
   /* header */
@@ -213,7 +217,7 @@
         <button data-lang="en" class="active">EN</button>
         <button data-lang="ru">RU</button>
       </div>
-      <a class="btn btn-ghost btn-sm" href="/season" target="_blank" rel="noopener" data-i18n="btn.season">Season ↗</a>
+      <a class="btn btn-season btn-sm" href="/season" target="_blank" rel="noopener" data-i18n="btn.season">Season 🔥</a>
       <a class="btn btn-primary btn-sm" href="#access" data-i18n="btn.access">Get early access</a>
     </div>
   </div>
@@ -457,7 +461,7 @@
       <a href="#why" data-i18n="nav.why">Why</a>
       <a href="#how" data-i18n="nav.how">How it works</a>
       <a href="#sellers" data-i18n="nav.sellers">For sellers</a>
-      <a href="/season" target="_blank" rel="noopener" data-i18n="btn.season">Season ↗</a>
+      <a href="/season" target="_blank" rel="noopener" data-i18n="btn.season">Season 🔥</a>
       <a href="#access" data-i18n="form.eyebrow">Early access</a>
     </div>
     <div class="foot-note" data-i18n="foot.note">© 2026 GOSH · DEX.DO · pre-launch · testnet on Acki Nacki</div>
@@ -473,7 +477,7 @@
   const DICT = {
     en: {
       "brand.tag":"AI token marketplace","nav.why":"Why","nav.how":"How it works","nav.sellers":"For sellers","nav.faq":"FAQ",
-      "btn.season":"Season ↗","btn.access":"Get early access","btn.access2":"Get early access","btn.demo":"Book a demo",
+      "btn.season":"Season 🔥","btn.access":"Get early access","btn.access2":"Get early access","btn.demo":"Book a demo",
       "hero.eyebrow":"Private · OpenAI-compatible · pre-launch",
       "hero.h":"Buy AI inference at the best price — and <span style='color:var(--accent)'>hedge what it costs</span>.",
       "hero.sub":"DEX.DO is a token marketplace for AI model access, built on Dark Order infrastructure. Route to the best seller through one OpenAI-compatible API, pay per token as you go, and lock in your future inference cost on the secondary market.",
@@ -515,7 +519,7 @@
     },
     ru: {
       "brand.tag":"маркетплейс AI-токенов","nav.why":"Зачем","nav.how":"Как работает","nav.sellers":"Продавцам","nav.faq":"FAQ",
-      "btn.season":"Season ↗","btn.access":"Ранний доступ","btn.access2":"Получить ранний доступ","btn.demo":"Заказать демо",
+      "btn.season":"Season 🔥","btn.access":"Ранний доступ","btn.access2":"Получить ранний доступ","btn.demo":"Заказать демо",
       "hero.eyebrow":"Приватно · OpenAI-совместимо · pre-launch",
       "hero.h":"Покупай AI-инференс по лучшей цене — и <span style='color:var(--accent)'>хеджируй его стоимость</span>.",
       "hero.sub":"DEX.DO — маркетплейс токенов на доступ к AI-моделям на инфраструктуре Dark Order. Один OpenAI-совместимый API подбирает лучшего продавца, платишь по мере использования, а будущую стоимость инференса можно зафиксировать на вторичном рынке.",
