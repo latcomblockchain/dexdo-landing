@@ -17,7 +17,7 @@
     --text:#E9EBEE; --muted:#878E97; --dim:#565d66;
     --accent:#6AA0FF; --accent-2:#3E6FD1;
     --ask:#E5484D; --bid:#3DB07A;
-    --nackl:#F5A623; --nackl-soft:rgba(245,166,35,.12);
+    --accent-soft:rgba(106,160,255,.12);
     --glow:rgba(106,160,255,.09);
     --disp:'Inter Tight',sans-serif; --ui:'Inter',sans-serif; --mono:'IBM Plex Mono',monospace;
     --maxw:1140px;
@@ -34,8 +34,8 @@
     padding:11px 18px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:.16s;white-space:nowrap}
   .btn-ghost{background:transparent;color:var(--text);border-color:var(--line2)}
   .btn-ghost:hover{border-color:var(--muted)}
-  .btn-connect{background:var(--nackl);color:#0a0c0f;border-color:var(--nackl);font-weight:600}
-  .btn-connect:hover{background:#f7b83a;box-shadow:0 0 22px -4px rgba(245,166,35,.55)}
+  .btn-connect{background:var(--text);color:#0a0c0f;border-color:var(--text);font-weight:600}
+  .btn-connect:hover{background:#fff}
   .btn-sm{padding:8px 14px;font-size:13.5px}
   .btn-lg{padding:14px 28px;font-size:16px}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
@@ -47,8 +47,8 @@
   .brand .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--muted);border:1px solid var(--line2);padding:3px 7px;border-radius:4px}
   .brand .season-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--nackl);border:1px solid rgba(245,166,35,.35);padding:3px 7px;border-radius:4px;
-    background:var(--nackl-soft)}
+    color:var(--accent);border:1px solid rgba(106,160,255,.35);padding:3px 7px;border-radius:4px;
+    background:var(--accent-soft)}
   .nav-links{display:flex;align-items:center;gap:26px;margin-left:auto}
   .nav-links a{font-size:14px;color:var(--muted);transition:.15s}
   .nav-links a:hover{color:var(--text)}
@@ -60,7 +60,7 @@
 
   .hero{position:relative;padding:84px 0 60px}
   .hero::before{content:"";position:absolute;inset:0;background:
-    radial-gradient(820px 440px at 60% -8%,rgba(245,166,35,.06),transparent 68%),
+    radial-gradient(820px 440px at 60% -8%,rgba(106,160,255,.06),transparent 68%),
     radial-gradient(600px 300px at 0% 100%,var(--glow),transparent 65%);pointer-events:none}
   .hero-inner{position:relative;max-width:760px}
   h1.hero-h{font-size:clamp(36px,5.2vw,62px);line-height:1.03;font-weight:700}
@@ -88,8 +88,8 @@
   .earn-card .num{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em}
   .earn-card h3{font-size:18px;margin:12px 0 8px;font-weight:600}
   .earn-card p{color:var(--muted);font-size:14.5px;margin:0}
-  .earn-card.featured{border-color:rgba(245,166,35,.3);background:linear-gradient(135deg,var(--surface),rgba(245,166,35,.03))}
-  .earn-card.featured .num{color:var(--nackl)}
+  .earn-card.featured{border-color:rgba(106,160,255,.3);background:linear-gradient(135deg,var(--surface),rgba(106,160,255,.03))}
+  .earn-card.featured .num{color:var(--accent)}
   .earn-note{font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:14px;padding:12px 16px;
     background:var(--surface);border:1px solid var(--line);border-radius:8px}
 
@@ -103,18 +103,16 @@
   .rule-item .rx{font-size:15px;color:var(--text);line-height:1.55}
   .rule-item .rx span{color:var(--muted)}
 
-  .cta-block{background:radial-gradient(600px 260px at 50% -10%,rgba(245,166,35,.08),transparent 72%);
+  .cta-block{background:radial-gradient(600px 260px at 50% -10%,rgba(106,160,255,.08),transparent 72%);
     border:1px solid var(--line);border-radius:16px;padding:52px 48px;text-align:center;margin-top:16px}
   .cta-block h2{font-size:clamp(24px,2.8vw,32px);margin-bottom:14px}
   .cta-block p{color:var(--muted);font-size:16px;max-width:480px;margin:0 auto 28px}
   .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
   .nackl-badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;
-    letter-spacing:.1em;text-transform:uppercase;color:var(--nackl);
-    background:var(--nackl-soft);border:1px solid rgba(245,166,35,.28);
+    letter-spacing:.1em;text-transform:uppercase;color:var(--accent);
+    background:var(--accent-soft);border:1px solid rgba(106,160,255,.28);
     border-radius:20px;padding:4px 12px;margin-bottom:20px}
-  .nackl-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--nackl);
-    box-shadow:0 0 8px var(--nackl);animation:nacklPulse 2s infinite}
-  @keyframes nacklPulse{0%,100%{opacity:.4}50%{opacity:1}}
+  .nackl-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
   footer{border-top:1px solid var(--line);padding:38px 0;margin-top:18px}
   .foot-in{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px}
   .foot-l{display:flex;flex-direction:column;gap:8px}
