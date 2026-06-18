@@ -207,9 +207,7 @@
   <div class="wrap nav-in">
     <div class="brand">DEX.DO <span class="tag" data-i18n="brand.tag">AI token marketplace</span></div>
     <nav class="nav-links">
-      <a href="#why" data-i18n="nav.why">Why</a>
-      <a href="#how" data-i18n="nav.how">How it works</a>
-      <a href="#sellers" data-i18n="nav.sellers">For sellers</a>
+      <a href="#markets" data-i18n="nav.markets">Markets</a>
       <a href="#faq" data-i18n="nav.faq">FAQ</a>
     </nav>
     <div class="nav-cta">
@@ -269,111 +267,14 @@
       <div class="ob-foot" id="obFoot">Secondary: hedge <b>CODEX-TICK → T+30d</b> · settled from this book</div>
     </div>
   </div>
-
-  <div class="strip">
-    <div class="wrap strip-in">
-      <span class="lbl" data-i18n="strip.lbl">Model coverage</span>
-      <span class="models">
-        <b>gpt-5.3-codex</b><b>gpt-5.5</b><b>claude-opus-4.8</b><b>claude-sonnet-4.6</b><b>gemini-2.5-pro</b>
-        <b>grok-4.3</b><b>deepseek-v3.1</b><b>qwen3-coder</b><b>kimi-k2.6</b><span data-i18n="strip.more">and more</span>
-      </span>
-    </div>
-  </div>
 </section>
 
-<!-- PROBLEM -->
-<section id="why" class="wrap">
+<!-- MARKETS -->
+<section id="markets" class="wrap">
   <div class="sec-head">
-    <div class="eyebrow" data-i18n="problem.eyebrow">The problem</div>
-    <h2 data-i18n="problem.h">Your AI bill is unpredictable, and the middleman keeps the margin.</h2>
-  </div>
-  <div class="problem">
-    <div class="p">
-      <h3 data-i18n="p1.h">Aggregators don't make it cheaper</h3>
-      <p data-i18n="p1.b">Centralized routers add a fixed markup on top of provider prices. Convenient — but you pay for it on every token, with no price you can plan around.</p>
-    </div>
-    <div class="p">
-      <h3 data-i18n="p2.h">Cost swings, budgets don't</h3>
-      <p data-i18n="p2.b">Model prices move and usage spikes, but there's no way to fix tomorrow's inference cost today. Finance can't forecast a number that's never stable.</p>
-    </div>
-  </div>
-</section>
-
-<!-- VALUE -->
-<section class="wrap">
-  <div class="sec-head">
-    <div class="eyebrow" data-i18n="value.eyebrow">What DEX.DO does</div>
-    <h2 data-i18n="value.h">Two markets, one endpoint: buy access cheaper, then hedge its price.</h2>
-    <p data-i18n="value.sub">A decentralized order book matches you to the best seller for any model. A secondary market lets you do what no aggregator allows — turn a volatile AI bill into a fixed, plannable cost.</p>
-  </div>
-  <div class="cards">
-    <div class="card featured">
-      <div class="num" data-i18n="c1.num">01 · UNIQUE</div>
-      <h3 data-i18n="c1.h">Hedge the price of inference</h3>
-      <p data-i18n="c1.b">The only inference marketplace with a secondary layer. Lock the future price of a model, or trade AI-event outcomes — settled from the marketplace's own order book.</p>
-    </div>
-    <div class="card">
-      <div class="num">02</div>
-      <h3 data-i18n="c2.h">Best price, not a fixed markup</h3>
-      <p data-i18n="c2.b">An open order book routes you to the best available ask across sellers. Price discovery instead of a middleman's cut on every token.</p>
-    </div>
-    <div class="card">
-      <div class="num">03</div>
-      <h3 data-i18n="c3.h">One API, live in minutes</h3>
-      <p data-i18n="c3.b">OpenAI-compatible. Swap the base URL and your existing clients, agents and tools keep working — no rewrite.</p>
-    </div>
-    <div class="card">
-      <div class="num">04</div>
-      <h3 data-i18n="c4.h">Private by design</h3>
-      <p data-i18n="c4.b">Built on Dark Order: shielded balances, hidden order sizes, no front-running. No account wall, no custody — pay per token with stream-settlement that caps your downside.</p>
-    </div>
-  </div>
-</section>
-
-<!-- HOW -->
-<section id="how" class="wrap">
-  <div class="sec-head">
-    <div class="eyebrow" data-i18n="how.eyebrow">How it works</div>
-    <h2 data-i18n="how.h">From base URL to a hedged inference budget.</h2>
-  </div>
-  <div class="steps">
-    <div class="step">
-      <div class="n">01</div>
-      <h3 data-i18n="s1.h">Point your client</h3>
-      <p data-i18n="s1.b">Change one base URL. Claude Code, Cursor, your scripts and agents keep running exactly as they do today.</p>
-    </div>
-    <div class="step">
-      <div class="n">02</div>
-      <h3 data-i18n="s2.h">Buy access at the best price</h3>
-      <p data-i18n="s2.b">Match the cheapest seller for the model you need. Pay per tick as it streams — your downside is capped, no trust in the seller required.</p>
-    </div>
-    <div class="step">
-      <div class="n">03</div>
-      <h3 data-i18n="s3.h">Hedge your cost</h3>
-      <p data-i18n="s3.b">Fix the future price of a model on the secondary market, or take a position on AI events. Plan the budget instead of guessing it.</p>
-    </div>
-  </div>
-</section>
-
-<!-- SELLERS -->
-<section id="sellers" class="wrap">
-  <div class="sellers">
-    <div class="l">
-      <div class="eyebrow" data-i18n="sellers.eyebrow">For sellers</div>
-      <h2 data-i18n="sellers.h">Turn spare model capacity into revenue.</h2>
-      <p data-i18n="sellers.b">Have an API license or unused capacity? List a model once, get matched to real demand, and settle on-chain — paid as you serve, with no platform holding your payout.</p>
-    </div>
-    <a class="btn btn-primary" href="#access" data-role="seller" data-i18n="sellers.cta">Become a seller →</a>
-  </div>
-</section>
-
-<!-- TRUST -->
-<section class="wrap">
-  <div class="trust">
-    <div class="t"><div class="lbl" data-i18n="t1.l">Infrastructure</div><p data-i18n-html data-i18n="t1.b">Built on <b>Dark Order</b> — on-chain order book, microsecond matching.</p></div>
-    <div class="t"><div class="lbl" data-i18n="t2.l">Network</div><p data-i18n-html data-i18n="t2.b">Runs on <b>Acki Nacki</b> — sub-second settlement.</p></div>
-    <div class="t"><div class="lbl" data-i18n="t3.l">Privacy</div><p data-i18n-html data-i18n="t3.b">Shielded prices and sizes. No front-running.</p></div>
-    <div class="t"><div class="lbl" data-i18n="t4.l">Custody</div><p data-i18n-html data-i18n="t4.b">Non-custodial. No sign-up wall, pay-as-you-go.</p></div>
+    <div class="eyebrow" data-i18n="markets.eyebrow">At launch · limited capacity</div>
+    <h2 data-i18n="markets.h">Hedging and semantic orders</h2>
+    <p data-i18n="markets.b">Lock the future price of a model on the secondary market, or place semantic orders on AI-event outcomes — settled from the marketplace's own order book. Both open with limited capacity at launch and scale as the book deepens.</p>
   </div>
 </section>
 
@@ -458,9 +359,8 @@
       </div>
     </div>
     <div class="foot-links">
-      <a href="#why" data-i18n="nav.why">Why</a>
-      <a href="#how" data-i18n="nav.how">How it works</a>
-      <a href="#sellers" data-i18n="nav.sellers">For sellers</a>
+      <a href="#markets" data-i18n="nav.markets">Markets</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
       <a href="/season" target="_blank" rel="noopener" data-i18n="btn.season">Season 🔥</a>
       <a href="#access" data-i18n="form.eyebrow">Early access</a>
     </div>
@@ -476,7 +376,8 @@
   /* ---- i18n ---- */
   const DICT = {
     en: {
-      "brand.tag":"AI token marketplace","nav.why":"Why","nav.how":"How it works","nav.sellers":"For sellers","nav.faq":"FAQ",
+      "brand.tag":"AI token marketplace","nav.markets":"Markets","nav.faq":"FAQ",
+      "markets.eyebrow":"At launch · limited capacity","markets.h":"Hedging and semantic orders","markets.b":"Lock the future price of a model on the secondary market, or place semantic orders on AI-event outcomes — settled from the marketplace's own order book. Both open with limited capacity at launch and scale as the book deepens.",
       "btn.season":"Season 🔥","btn.access":"Get early access","btn.access2":"Get early access","btn.demo":"Book a demo",
       "hero.eyebrow":"Private · OpenAI-compatible · pre-launch",
       "hero.h":"Buy AI inference at the best price — and <span style='color:var(--accent)'>hedge what it costs</span>.",
@@ -518,7 +419,8 @@
       "foot.note":"© 2026 GOSH · DEX.DO · pre-launch · testnet on Acki Nacki"
     },
     ru: {
-      "brand.tag":"маркетплейс AI-токенов","nav.why":"Зачем","nav.how":"Как работает","nav.sellers":"Продавцам","nav.faq":"FAQ",
+      "brand.tag":"маркетплейс AI-токенов","nav.markets":"Рынки","nav.faq":"FAQ",
+      "markets.eyebrow":"На старте · ограниченная ёмкость","markets.h":"Хеджирование и семантические ордера","markets.b":"Зафиксируй будущую цену модели на вторичном рынке или размещай семантические ордера на исходы ИИ-событий — сеттл из собственного order book маркетплейса. На старте обе функции открываются с ограниченной ёмкостью и масштабируются по мере роста стакана.",
       "btn.season":"Season 🔥","btn.access":"Ранний доступ","btn.access2":"Получить ранний доступ","btn.demo":"Заказать демо",
       "hero.eyebrow":"Приватно · OpenAI-совместимо · pre-launch",
       "hero.h":"Покупай AI-инференс по лучшей цене — и <span style='color:var(--accent)'>хеджируй его стоимость</span>.",
