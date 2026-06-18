@@ -139,14 +139,24 @@
   .problem .p h3{font-size:18px;margin-bottom:7px;font-weight:600}
   .problem .p p{color:var(--muted);font-size:15px;margin:0}
 
-  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px;transition:.18s}
-  .card:hover{border-color:var(--line2)}
-  .card .num{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em}
-  .card h3{font-size:19px;margin:13px 0 9px;font-weight:600}
-  .card.featured{border-color:var(--accent-2)}
-  .card.featured .num{color:var(--accent)}
-  .card p{color:var(--muted);font-size:14.5px;margin:0}
+  .faq-list{display:flex;flex-direction:column;border-top:1px solid var(--line);max-width:880px}
+  .faq-item{border-bottom:1px solid var(--line)}
+  .faq-q{width:100%;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;
+    background:none;border:none;cursor:pointer;text-align:left;color:var(--text);
+    font-family:var(--disp);font-weight:600;font-size:18px;letter-spacing:-0.01em;padding:21px 2px;transition:.15s}
+  .faq-q:hover{color:#fff}
+  .faq-ic{position:relative;flex:none;width:14px;height:14px;margin-top:4px}
+  .faq-ic::before,.faq-ic::after{content:"";position:absolute;background:var(--muted);border-radius:2px;transition:.22s}
+  .faq-ic::before{top:6px;left:0;width:14px;height:2px}
+  .faq-ic::after{top:0;left:6px;width:2px;height:14px}
+  .faq-item.open .faq-q{color:#fff}
+  .faq-item.open .faq-ic::before{background:var(--accent)}
+  .faq-item.open .faq-ic::after{transform:scaleY(0)}
+  .faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .26s ease}
+  .faq-item.open .faq-a{grid-template-rows:1fr}
+  .faq-a-in{overflow:hidden}
+  .faq-a p{color:var(--muted);font-size:15px;line-height:1.62;margin:0;padding:0 2px 22px;max-width:760px}
+  [dir="rtl"] .faq-q{text-align:right}
 
   .steps{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   .step{padding:28px 24px;border-right:1px solid var(--line)}
@@ -360,14 +370,40 @@
     <div class="eyebrow" data-i18n="faq.eyebrow">FAQ</div>
     <h2 data-i18n="faq.h">Straight answers.</h2>
   </div>
-  <div class="cards">
-    <div class="card"><h3 data-i18n="q1.h">How is this cheaper than aggregators?</h3><p data-i18n="q1.b">An open order book matches you to the best available ask across sellers, instead of charging a fixed markup on every token. And you get something they don't offer at all — the ability to hedge the price.</p></div>
-    <div class="card"><h3 data-i18n="q2.h">Is reselling model access legal?</h3><p data-i18n="q2.b">The buyer-facing marketplace runs on supply whose resale is permitted by provider terms (open models, wholesale, resale-allowed APIs). It's the same category of service as any model router.</p></div>
-    <div class="card"><h3 data-i18n="q3.h">What about data and privacy?</h3><p data-i18n="q3.b">DEX.DO inherits Dark Order privacy — shielded prices and order sizes, no front-running — on an anonymous L1 with no account wall. Requests reach the provider directly; the chain only meters usage.</p></div>
-    <div class="card"><h3 data-i18n="q4.h">How is it different from other crypto inference markets?</h3><p data-i18n="q4.b">Most are spot-only. DEX.DO adds a secondary market so you can hedge your future cost — plus a private on-chain order book and a rewards program for early participants.</p></div>
-    <div class="card"><h3 data-i18n="q5.h">What do I actually pay for?</h3><p data-i18n="q5.b">Access to a model is sold in fixed ticks. You pay per tick as the work streams, so there's nothing to trust up front and your downside is capped.</p></div>
-    <div class="card"><h3 data-i18n="q6.h">When does it launch?</h3><p data-i18n="q6.b">The marketplace goes live on testnet first, with test tokens, ahead of mainnet. Join early access to get in with the first cohort.</p></div>
+  <div class="faq-list">
+    <div class="faq-item open">
+      <button class="faq-q" aria-expanded="true"><span data-i18n="q1.h">How is this cheaper than aggregators?</span><span class="faq-ic" aria-hidden="true"></span></button>
+      <div class="faq-a"><div class="faq-a-in"><p data-i18n="q1.b">An open order book matches you to the best available ask across sellers, instead of charging a fixed markup on every token. And you get something they don't offer at all — the ability to hedge the price.</p></div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false"><span data-i18n="q2.h">Is reselling model access legal?</span><span class="faq-ic" aria-hidden="true"></span></button>
+      <div class="faq-a"><div class="faq-a-in"><p data-i18n="q2.b">The buyer-facing marketplace runs on supply whose resale is permitted by provider terms (open models, wholesale, resale-allowed APIs). It's the same category of service as any model router.</p></div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false"><span data-i18n="q3.h">What about data and privacy?</span><span class="faq-ic" aria-hidden="true"></span></button>
+      <div class="faq-a"><div class="faq-a-in"><p data-i18n="q3.b">DEX.DO inherits Dark Order privacy — shielded prices and order sizes, no front-running — on an anonymous L1 with no account wall. Requests reach the provider directly; the chain only meters usage.</p></div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false"><span data-i18n="q4.h">How is it different from other crypto inference markets?</span><span class="faq-ic" aria-hidden="true"></span></button>
+      <div class="faq-a"><div class="faq-a-in"><p data-i18n="q4.b">Most are spot-only. DEX.DO adds a secondary market so you can hedge your future cost — plus a private on-chain order book and a rewards program for early participants.</p></div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false"><span data-i18n="q5.h">What do I actually pay for?</span><span class="faq-ic" aria-hidden="true"></span></button>
+      <div class="faq-a"><div class="faq-a-in"><p data-i18n="q5.b">Access to a model is sold in fixed ticks. You pay per tick as the work streams, so there's nothing to trust up front and your downside is capped.</p></div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false"><span data-i18n="q6.h">When does it launch?</span><span class="faq-ic" aria-hidden="true"></span></button>
+      <div class="faq-a"><div class="faq-a-in"><p data-i18n="q6.b">The marketplace goes live on testnet first, with test tokens, ahead of mainnet. Join early access to get in with the first cohort.</p></div></div>
+    </div>
   </div>
+  <script>
+    document.querySelectorAll('.faq-q').forEach(function(b){
+      b.addEventListener('click', function(){
+        var it=b.parentNode; var open=it.classList.toggle('open');
+        b.setAttribute('aria-expanded', open?'true':'false');
+      });
+    });
+  </script>
 </section>
 
 <footer>
