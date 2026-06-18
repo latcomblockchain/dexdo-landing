@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEX.DO — Season Points &amp; Rewards Rules · v1.0</title>
+<meta name="description" content="Full rules of the DEX.DO Season Points & Rewards program (Season 1). Version 1.0." />
+<meta name="robots" content="index, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0B0D; --surface:#101317; --surface2:#14181D; --line:#22272E; --line2:#2D333B;
+    --text:#E9EBEE; --muted:#878E97; --dim:#565d66;
+    --accent:#6AA0FF; --accent-2:#3E6FD1;
+    --ask:#E5484D; --bid:#3DB07A;
+    --accent-soft:rgba(106,160,255,.12);
+    --disp:'Inter Tight',sans-serif; --ui:'Inter',sans-serif; --mono:'IBM Plex Mono',monospace;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--ui);line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:16px}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-left:24px;padding-right:24px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  h1,h2,h3{font-family:var(--disp);font-weight:600;letter-spacing:-0.02em;margin:0;color:var(--text)}
+  .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--ui);font-weight:500;font-size:13.5px;
+    padding:8px 14px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:.16s;white-space:nowrap}
+  .btn-ghost{background:transparent;color:var(--text);border-color:var(--line2)}
+  .btn-ghost:hover{border-color:var(--muted)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);
+    background:rgba(10,11,13,.8);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:60px;gap:20px}
+  .brand{font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:.01em;display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .brand .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);border:1px solid var(--line2);padding:3px 7px;border-radius:4px}
+  .brand .season-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);border:1px solid rgba(106,160,255,.35);padding:3px 7px;border-radius:4px;
+    background:var(--accent-soft)}
+  .nav-cta{display:flex;align-items:center;gap:10px}
+  .langsel{appearance:none;-webkit-appearance:none;background:var(--surface2);color:var(--text);
+    border:1px solid var(--line2);border-radius:8px;font-family:var(--ui);font-size:13px;line-height:1;
+    padding:8px 28px 8px 11px;cursor:pointer;transition:.15s;max-width:172px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23878E97' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat:no-repeat;background-position:right 10px center}
+  .langsel:hover{border-color:var(--muted)}
+  .langsel:focus{outline:none;border-color:var(--accent)}
+  .langsel option{background:#101317;color:var(--text)}
+  [dir="rtl"] .langsel{padding:8px 11px 8px 28px;background-position:left 10px center}
+
+  .rules-hero{padding:56px 0 6px}
+  .ver-badge{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent);border:1px solid rgba(106,160,255,.35);background:var(--accent-soft);
+    padding:3px 9px;border-radius:5px;margin-bottom:16px}
+  .rules-h1{font-family:var(--disp);font-size:clamp(28px,4vw,40px);line-height:1.08;font-weight:700;letter-spacing:-0.02em;max-width:760px}
+  .enbanner{display:none;max-width:820px;margin:22px 0 0;padding:12px 16px;border:1px solid var(--line2);
+    border-radius:8px;background:var(--surface);font-size:13.5px;color:var(--muted)}
+  .enbanner.show{display:block}
+
+  .legal{max-width:820px;padding:26px 0 72px}
+  .legal .intro{color:var(--text);font-size:16px;line-height:1.7;margin:0 0 8px}
+  .legal h2{font-size:20px;margin:34px 0 12px;font-weight:600}
+  .legal p{color:var(--muted);font-size:15px;line-height:1.7;margin:0 0 12px}
+  .legal ul{margin:0 0 14px;padding-left:20px}
+  .legal li{color:var(--muted);font-size:15px;line-height:1.7;margin:0 0 8px}
+  .legal strong{color:var(--text);font-weight:600}
+  [dir="rtl"] .legal ul{padding-left:0;padding-right:20px}
+
+  footer{border-top:1px solid var(--line);padding:36px 0;margin-top:8px}
+  .foot-in{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px}
+  .foot-note{font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .foot-links{display:flex;gap:22px;font-size:13.5px;color:var(--muted);flex-wrap:wrap}
+  .foot-links a:hover{color:var(--text)}
+
+  @media (max-width:680px){ .ver-badge{margin-bottom:12px} }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <div class="brand">
+      <a href="/" style="display:flex;align-items:center;gap:10px;color:inherit">DEX.DO <span class="tag" data-i18n="brand.tag">AI token marketplace</span></a>
+      <span class="season-tag">Season 1</span>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost" href="/season" data-i18n="rules.back">← Back to Season</a>
+      <select id="langSel" class="langsel" aria-label="Language">
+        <option value="ar">العربية</option>
+        <option value="ca">Català</option>
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fa">فارسی</option>
+        <option value="fr">Français</option>
+        <option value="id">Bahasa Indonesia</option>
+        <option value="it">Italiano</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+        <option value="ms">Bahasa Melayu</option>
+        <option value="pl">Polski</option>
+        <option value="pt">Português</option>
+        <option value="ru">Русский</option>
+        <option value="tr">Türkçe</option>
+        <option value="uk">Українська</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<section class="rules-hero">
+  <div class="wrap">
+    <span class="ver-badge">v1.0</span>
+    <div class="eyebrow" data-i18n="rules.eyebrow">Program rules</div>
+    <h1 class="rules-h1" data-i18n="rules.title">Season Points &amp; Rewards — Full Rules</h1>
+    <div class="enbanner" id="enbanner" data-i18n="rules.enbanner">These rules are available in English and Russian. You're viewing the English version.</div>
+  </div>
+</section>
+
+<section class="wrap">
+
+  <!-- ===================== RU ===================== -->
+  <div class="legal" id="rules-ru" style="display:none">
+    <p class="intro">Подключая кошелёк и/или участвуя в Программе, вы подтверждаете, что прочитали, поняли и безоговорочно принимаете настоящие Правила. Если вы не согласны — не участвуйте.</p>
+    <p style="font-family:var(--mono);font-size:12.5px;color:var(--dim)">Версия 1.0 · Дата вступления в силу: [ДАТА] · Организатор: [GOSH / юр. лицо, контакт — уточнить]</p>
+
+    <h2>1. Определения</h2>
+    <ul>
+      <li><strong>Организатор</strong> — [GOSH / команда DEX.DO], проводящая Программу.</li>
+      <li><strong>Программа</strong> — кампания вознаграждений «Season Points &amp; Rewards».</li>
+      <li><strong>Сезон 1</strong> — текущий период Программы на тестовой сети Acki Nacki Shellnet.</li>
+      <li><strong>Points (Поинты)</strong> — внутренние условные баллы активности, начисляемые по усмотрению Организатора.</li>
+      <li><strong>NACKL</strong> — токен сети Acki Nacki.</li>
+      <li><strong>Shellnet</strong> — тестовая сеть Acki Nacki.</li>
+      <li><strong>Участник</strong> — лицо, подключившее кошелёк и/или совершающее действия в рамках Программы.</li>
+    </ul>
+
+    <h2>2. Право на участие</h2>
+    <ul>
+      <li>Вам не менее 18 лет (или возраста совершеннолетия в вашей юрисдикции) и вы полностью дееспособны.</li>
+      <li>Участие не запрещено законами вашей страны; вы не находитесь под санкциями и не включены в санкционные списки.</li>
+      <li>Вы участвуете самостоятельно, без мультиаккаунтов и без неразрешённой автоматизации.</li>
+      <li>Вы единолично отвечаете за соблюдение применимых к вам законов и за уплату любых налогов.</li>
+      <li>Организатор вправе отказать в участии или дисквалифицировать любого Участника по своему усмотрению.</li>
+    </ul>
+
+    <h2>3. Природа Points</h2>
+    <ul>
+      <li>Points — условные баллы для измерения активности в рамках Программы. Они <strong>не являются</strong> деньгами, валютой, ценной бумагой, долей, акцией, депозитом, финансовым инструментом или платёжным средством.</li>
+      <li>Points <strong>не дают</strong> прав на управление, дивиденды, прибыль или долю в Организаторе или проекте.</li>
+      <li>Points <strong>не имеют гарантированной ценности</strong>, не подлежат продаже, передаче или обмену иначе как в порядке, прямо предусмотренном Правилами, и могут быть изменены или аннулированы.</li>
+      <li>Начисление Points не создаёт у Организатора обязательств перед Участником, кроме прямо указанных в Правилах, которые Организатор вправе менять.</li>
+    </ul>
+
+    <h2>4. Тестовая сеть и риски</h2>
+    <ul>
+      <li>Программа проходит на тестовой сети Shellnet. Все токены на тесте — тестовые и не имеют денежной ценности.</li>
+      <li>Возможны сбои, рестарты сети, потеря прогресса, ошибки смарт-контрактов и приложения. Сеть и сервис предоставляются <strong>«КАК ЕСТЬ» (AS IS)</strong>, без каких-либо гарантий.</li>
+      <li>При рестарте/апгрейде может потребоваться вывод средств и/или повторный деплой кошелька для сохранения прогресса; условия и сроки объявляет Организатор. Без своевременных действий Участника прогресс может быть утрачен.</li>
+    </ul>
+
+    <h2>5. Начисление Points</h2>
+    <ul>
+      <li>Points начисляются за определённые действия в рамках Программы (например: размещение и исполнение заявок, реальное потребление инференса, предсказания, рефералы и иные действия, объявленные Организатором).</li>
+      <li><strong>Конкретные значения, веса категорий, лимиты (капы), список засчитываемых действий и формула расчёта определяются Организатором, не раскрываются полностью и могут быть изменены в любой момент</strong> (в т.ч. в целях защиты от накрутки).</li>
+      <li>Итоговое вознаграждение распределяется как <strong>доля от фиксированного пула</strong>: больше участников/активности — меньше доля на единицу; общий пул не превышается.</li>
+      <li>Отдельные периоды (например, первая неделя Сезона) могут не учитываться при начислении.</li>
+    </ul>
+
+    <h2>6. Награды (NACKL) и обязательный claim/вывод</h2>
+    <ul>
+      <li>По итогам Сезона Points могут быть конвертированы в NACKL по формуле, пулу и курсу, <strong>определяемым Организатором</strong>.</li>
+      <li><strong>Обязательное условие получения награды:</strong> вывод средств на зарегистрированный в Программе публичный кошелёк в установленный Организатором срок и подтверждение владения. В момент вывода активность по приватным нотам Участника связывается с его аккаунтом.</li>
+      <li>Если вывод/claim не совершён в срок — соответствующие Points и/или награды <strong>сгорают без компенсации</strong>.</li>
+      <li>Сроки, механика и размер пула объявляются Организатором отдельно и могут меняться.</li>
+    </ul>
+
+    <h2>7. Права Организатора</h2>
+    <p>Организатор вправе в любое время, по своему единоличному усмотрению и без предварительного уведомления:</p>
+    <ul>
+      <li>изменять, дополнять или заменять настоящие Правила, формулу расчёта, веса, лимиты, список засчитываемых действий, размер и состав пула наград, курс конвертации;</li>
+      <li>приостанавливать, продлевать, сокращать, досрочно завершать, перезапускать или полностью отменять Программу или любой Сезон;</li>
+      <li>дисквалифицировать Участника и/или аннулировать (обнулить) его Points и награды при подозрении в злоупотреблении, мошенничестве, накрутке, мультиаккаунтинге, эксплуатации уязвимостей или нарушении Правил либо закона;</li>
+      <li>изменять, приостанавливать или прекращать начисление и выплату наград;</li>
+      <li>пересчитывать и корректировать начисления постфактум (в т.ч. после связывания приватных нот при выводе).</li>
+    </ul>
+    <p><strong>Все решения Организатора окончательны.</strong> Участие в Программе не порождает у Участника каких-либо имущественных требований к Организатору.</p>
+
+    <h2>8. Запрещённые действия</h2>
+    <p>Запрещены, в частности: эксплуатация уязвимостей; самоторговля/wash-trading и иные сделки с самим собой ради накрутки; мультиаккаунты и обход лимитов; неразрешённая автоматизация/боты; манипуляция ценой, оракулом или метриками; любые действия, искажающие честное измерение активности. Нарушение влечёт дисквалификацию и аннулирование Points и наград.</p>
+
+    <h2>9. Отказ от гарантий и ограничение ответственности</h2>
+    <ul>
+      <li>Программа, сеть, смарт-контракты и приложение предоставляются <strong>«КАК ЕСТЬ»</strong> и <strong>«КАК ДОСТУПНО»</strong>, без явных или подразумеваемых гарантий.</li>
+      <li>В максимально допустимой законом степени Организатор не несёт ответственности за любые прямые, косвенные, случайные или сопутствующие убытки, упущенную выгоду, потерю данных, средств или доступа, сбои сети/контрактов, действия третьих лиц, а также за решения Участника, принятые в связи с Программой.</li>
+      <li>Совокупная ответственность Организатора, если она будет установлена, ограничена в максимально допустимой законом степени.</li>
+    </ul>
+
+    <h2>10. Налоги</h2>
+    <p>Участник самостоятельно определяет и уплачивает любые налоги и сборы, связанные с получением наград, в своей юрисдикции.</p>
+
+    <h2>11. Данные и приватность</h2>
+    <p>Для работы Программы Организатор обрабатывает адрес кошелька, данные об активности и связанные технические данные. Подробнее — в Политике конфиденциальности [ссылка]. При выводе средств активность по приватным нотам связывается с зарегистрированным аккаунтом.</p>
+
+    <h2>12. Изменения Правил</h2>
+    <p>Организатор вправе изменять Правила в любое время. Актуальная версия публикуется на этой странице с указанием версии и даты. Продолжение участия после изменений означает согласие с ними.</p>
+
+    <h2>13. Применимое право и разрешение споров</h2>
+    <p>[Уточняется с юристом: применимое право и порядок разрешения споров — по указанию Организатора; возможно арбитражное разбирательство.]</p>
+
+    <h2>14. Согласие</h2>
+    <p>Отметка поля «Я ознакомился и согласен с Правилами Season Points &amp; Rewards» и/или участие в Программе означает безоговорочное принятие настоящих Правил.</p>
+  </div>
+
+  <!-- ===================== EN ===================== -->
+  <div class="legal" id="rules-en">
+    <p class="intro">By connecting a wallet and/or participating in the Program, you confirm that you have read, understood and unconditionally accept these Rules. If you do not agree, do not participate.</p>
+    <p style="font-family:var(--mono);font-size:12.5px;color:var(--dim)">Version 1.0 · Effective date: [DATE] · Organizer: [GOSH / legal entity, contact — TBD]</p>
+
+    <h2>1. Definitions</h2>
+    <ul>
+      <li><strong>Organizer</strong> — [GOSH / the DEX.DO team] running the Program.</li>
+      <li><strong>Program</strong> — the "Season Points &amp; Rewards" rewards campaign.</li>
+      <li><strong>Season 1</strong> — the current Program period on the Acki Nacki Shellnet test network.</li>
+      <li><strong>Points</strong> — internal, notional activity points credited at the Organizer's discretion.</li>
+      <li><strong>NACKL</strong> — the Acki Nacki network token.</li>
+      <li><strong>Shellnet</strong> — the Acki Nacki test network.</li>
+      <li><strong>Participant</strong> — a person who connects a wallet and/or performs actions within the Program.</li>
+    </ul>
+
+    <h2>2. Eligibility</h2>
+    <ul>
+      <li>You are at least 18 (or the age of majority in your jurisdiction) and have full legal capacity.</li>
+      <li>Participation is not prohibited by the laws of your country; you are not subject to sanctions and not on any sanctions list.</li>
+      <li>You participate on your own, without multi-accounting or unauthorized automation.</li>
+      <li>You are solely responsible for complying with the laws applicable to you and for paying any taxes.</li>
+      <li>The Organizer may refuse participation or disqualify any Participant at its discretion.</li>
+    </ul>
+
+    <h2>3. Nature of Points</h2>
+    <ul>
+      <li>Points are notional points used to measure activity within the Program. They are <strong>not</strong> money, currency, a security, a share, equity, a deposit, a financial instrument or a means of payment.</li>
+      <li>Points <strong>do not</strong> grant any governance, dividend, profit or ownership rights in the Organizer or the project.</li>
+      <li>Points <strong>have no guaranteed value</strong>, are not transferable, saleable or exchangeable except as expressly provided in these Rules, and may be changed or cancelled.</li>
+      <li>Crediting Points creates no obligation of the Organizer toward the Participant other than those expressly stated in these Rules, which the Organizer may change.</li>
+    </ul>
+
+    <h2>4. Test network and risks</h2>
+    <ul>
+      <li>The Program runs on the Shellnet test network. All test tokens have no monetary value.</li>
+      <li>Failures, network restarts, loss of progress, and smart-contract/app bugs are possible. The network and service are provided <strong>"AS IS"</strong>, without warranties of any kind.</li>
+      <li>A restart/upgrade may require withdrawal and/or wallet redeployment to preserve progress; the Organizer announces terms and deadlines. Without timely action by the Participant, progress may be lost.</li>
+    </ul>
+
+    <h2>5. Earning Points</h2>
+    <ul>
+      <li>Points are credited for certain actions within the Program (e.g.: placing and filling orders, actual inference consumption, predictions, referrals, and other actions announced by the Organizer).</li>
+      <li><strong>The specific values, category weights, caps, the list of qualifying actions, and the calculation formula are determined by the Organizer, are not fully disclosed, and may be changed at any time</strong> (including to prevent abuse).</li>
+      <li>The final reward is distributed as a <strong>share of a fixed pool</strong>: more participants/activity means a smaller share per unit; the total pool is never exceeded.</li>
+      <li>Certain periods (e.g. the first week of the Season) may be excluded from accrual.</li>
+    </ul>
+
+    <h2>6. Rewards (NACKL) and mandatory claim/withdrawal</h2>
+    <ul>
+      <li>After the Season, Points may be converted into NACKL using a formula, pool and rate <strong>determined by the Organizer</strong>.</li>
+      <li><strong>Mandatory condition for receiving a reward:</strong> withdrawal to a wallet registered in the Program within the Organizer's deadline and confirmation of ownership. Upon withdrawal, the Participant's activity across private notes is linked to their account.</li>
+      <li>If withdrawal/claim is not completed on time, the corresponding Points and/or rewards <strong>are forfeited without compensation</strong>.</li>
+      <li>Deadlines, mechanics and pool size are announced separately by the Organizer and may change.</li>
+    </ul>
+
+    <h2>7. Organizer's rights</h2>
+    <p>At any time, in its sole discretion and without prior notice, the Organizer may:</p>
+    <ul>
+      <li>change, amend or replace these Rules, the calculation formula, weights, caps, the list of qualifying actions, the size and composition of the reward pool, and the conversion rate;</li>
+      <li>suspend, extend, shorten, end early, restart, or fully cancel the Program or any Season;</li>
+      <li>disqualify a Participant and/or void (zero out) their Points and rewards on suspicion of abuse, fraud, gaming, multi-accounting, exploitation of vulnerabilities, or breach of these Rules or law;</li>
+      <li>change, suspend or terminate the accrual and payout of rewards;</li>
+      <li>recalculate and adjust accruals retroactively (including after linking private notes at withdrawal).</li>
+    </ul>
+    <p><strong>All decisions of the Organizer are final.</strong> Participation creates no proprietary claims of the Participant against the Organizer.</p>
+
+    <h2>8. Prohibited conduct</h2>
+    <p>Prohibited, in particular: exploiting vulnerabilities; self-trading/wash-trading and other self-dealing to inflate metrics; multi-accounting and circumventing caps; unauthorized automation/bots; manipulation of price, oracle or metrics; any conduct that distorts the fair measurement of activity. Violation results in disqualification and voiding of Points and rewards.</p>
+
+    <h2>9. Disclaimer of warranties and limitation of liability</h2>
+    <ul>
+      <li>The Program, network, smart contracts and app are provided <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong>, without express or implied warranties.</li>
+      <li>To the maximum extent permitted by law, the Organizer is not liable for any direct, indirect, incidental or consequential damages, lost profit, loss of data, funds or access, network/contract failures, third-party acts, or decisions made by the Participant in connection with the Program.</li>
+      <li>The Organizer's aggregate liability, if any is established, is limited to the maximum extent permitted by law.</li>
+    </ul>
+
+    <h2>10. Taxes</h2>
+    <p>The Participant alone determines and pays any taxes and levies related to receiving rewards in their jurisdiction.</p>
+
+    <h2>11. Data and privacy</h2>
+    <p>To run the Program, the Organizer processes the wallet address, activity data and related technical data. See the Privacy Policy [link]. Upon withdrawal, activity across private notes is linked to the registered account.</p>
+
+    <h2>12. Changes to the Rules</h2>
+    <p>The Organizer may change these Rules at any time. The current version is published on this page with its version and date. Continued participation after changes constitutes acceptance.</p>
+
+    <h2>13. Governing law and disputes</h2>
+    <p>[To be finalized with a lawyer: governing law and dispute resolution as designated by the Organizer; arbitration possible.]</p>
+
+    <h2>14. Consent</h2>
+    <p>Ticking the box "I have read and agree to the Season Points &amp; Rewards Rules" and/or participating in the Program constitutes unconditional acceptance of these Rules.</p>
+  </div>
+
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="/season" data-i18n="rules.back">← Back to Season</a>
+      <a href="/">Marketplace</a>
+    </div>
+    <div class="foot-note">© 2026 GOSH · DEX.DO · Season 1 · Shellnet · Acki Nacki</div>
+  </div>
+</footer>
+
+<script>
+  var DICT = {
+    en: {
+      "brand.tag":"AI token marketplace",
+      "rules.back":"← Back to Season",
+      "rules.eyebrow":"Program rules",
+      "rules.title":"Season Points & Rewards — Full Rules",
+      "rules.enbanner":"These rules are available in English and Russian. You're viewing the English version."
+    },
+    ru: {
+      "brand.tag":"маркетплейс AI-токенов",
+      "rules.back":"← Назад к Season",
+      "rules.eyebrow":"Правила программы",
+      "rules.title":"Правила Season Points & Rewards",
+      "rules.enbanner":"Правила доступны на английском и русском. Сейчас показана английская версия."
+    }
+  };
+  var LANGS = {ar:1,ca:1,en:1,es:1,fa:1,fr:1,id:1,it:1,ja:1,ko:1,ms:1,pl:1,pt:1,ru:1,tr:1,uk:1,zh:1};
+
+  function applyLang(lang){
+    if(!LANGS[lang]) lang='en';
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang==='ar'||lang==='fa') ? 'rtl' : 'ltr';
+    var d = DICT[lang] || {};
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var k = el.getAttribute('data-i18n');
+      var v = (d[k]!=null) ? d[k] : DICT.en[k];
+      if(v==null) return;
+      if(el.hasAttribute('data-i18n-html')) el.innerHTML = v; else el.textContent = v;
+    });
+    var ru = (lang==='ru');
+    document.getElementById('rules-ru').style.display = ru ? 'block' : 'none';
+    document.getElementById('rules-en').style.display = ru ? 'none' : 'block';
+    document.getElementById('enbanner').classList.toggle('show', !(lang==='en'||lang==='ru'));
+    var sel=document.getElementById('langSel'); if(sel) sel.value=lang;
+    try{ localStorage.setItem('dexdo_lang', lang); }catch(e){}
+  }
+  (function(){
+    var sel=document.getElementById('langSel');
+    if(sel) sel.addEventListener('change', function(){ applyLang(sel.value); });
+    var initial='en';
+    var n=(navigator.language||'').slice(0,2).toLowerCase(); if(LANGS[n]) initial=n;
+    try{ var s=localStorage.getItem('dexdo_lang'); if(s && LANGS[s]) initial=s; }catch(e){}
+    var q=new URLSearchParams(location.search).get('lang'); if(q && LANGS[q]) initial=q;
+    applyLang(initial);
+  })();
+</script>
+</body>
+</html>
