@@ -99,6 +99,23 @@
   .earn-note{font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:14px;padding:12px 16px;
     background:var(--surface);border:1px solid var(--line);border-radius:8px}
 
+  .et-h{font-size:20px;font-weight:600;margin:44px 0 16px}
+  .et{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+  .et-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:18px;padding:12px 20px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    border-bottom:1px solid var(--line);background:var(--surface2)}
+  .et-group{padding:15px 20px 9px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent);border-top:1px solid var(--line);background:rgba(106,160,255,.04)}
+  .et .et-group:first-of-type{border-top:none}
+  .et-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:18px;padding:13px 20px;border-top:1px solid var(--line)}
+  .et-a{color:var(--text);font-size:14.5px;font-weight:500}
+  .et-b{color:var(--muted);font-size:14px;line-height:1.5}
+  @media (max-width:680px){
+    .et-head{display:none}
+    .et-row{grid-template-columns:1fr;gap:3px;padding:14px 16px}
+    .et-group{padding:13px 16px 8px}
+  }
+
   .rules-list{display:flex;flex-direction:column;max-width:760px}
   .rule-item{display:flex;align-items:flex-start;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}
   .rule-item:last-child{border-bottom:none}
@@ -261,6 +278,30 @@
         <p data-i18n="a4.b">Invite via your link. A referral counts once they connect and make their first activity.</p>
       </div>
     </div>
+    <h3 class="et-h" data-i18n="et.h">Full list of actions</h3>
+    <div class="et">
+      <div class="et-head"><span data-i18n="et.colA">Action</span><span data-i18n="et.colB">What counts</span></div>
+
+      <div class="et-group" data-i18n="et.g1">Primary market — AI model access (order-book trading)</div>
+      <div class="et-row"><div class="et-a" data-i18n="et.p1">Place a sell order for access</div><div class="et-b" data-i18n="et.p1d">You post supply into the order book</div></div>
+      <div class="et-row"><div class="et-a" data-i18n="et.p2">Place a buy order for access</div><div class="et-b" data-i18n="et.p2d">You post demand into the order book</div></div>
+      <div class="et-row"><div class="et-a" data-i18n="et.p3">First sale · first purchase</div><div class="et-b" data-i18n="et.p3d">Your first time entering each side of the market</div></div>
+      <div class="et-row"><div class="et-a" data-i18n="et.p4">A trade fills (you sold / you bought)</div><div class="et-b" data-i18n="et.p4d">Someone matches your order</div></div>
+      <div class="et-row"><div class="et-a" data-i18n="et.p5">Real inference consumption</div><div class="et-b" data-i18n="et.p5d">You actually use the access you bought — the strongest signal</div></div>
+      <div class="et-row"><div class="et-a" data-i18n="et.p6">Clean settlement</div><div class="et-b" data-i18n="et.p6d">The stream closes cleanly, with no dispute</div></div>
+
+      <div class="et-group" data-i18n="et.g2">Secondary market — predictions &amp; hedging</div>
+      <div class="et-row"><div class="et-a" data-i18n="et.s1">Bet on an AI event</div><div class="et-b" data-i18n="et.s1d">Model release, benchmark, date, etc.</div></div>
+      <div class="et-row"><div class="et-a" data-i18n="et.s2">Predict a token's price at date T</div><div class="et-b" data-i18n="et.s2d">Hedge your future cost</div></div>
+      <div class="et-row"><div class="et-a" data-i18n="et.s3">Enter / exit with a full set; maker / taker</div><div class="et-b" data-i18n="et.s3d">You provide or take liquidity</div></div>
+      <div class="et-row"><div class="et-a" data-i18n="et.s4">Order types (GTC / IOC / FOK / POST_ONLY), batch, cancel</div><div class="et-b" data-i18n="et.s4d">Functional coverage</div></div>
+      <div class="et-row"><div class="et-a" data-i18n="et.s5">Claim a payout</div><div class="et-b" data-i18n="et.s5d">You claim on a resolved market</div></div>
+
+      <div class="et-group" data-i18n="et.g3">Off-chain</div>
+      <div class="et-row"><div class="et-a" data-i18n="et.o1">Referral</div><div class="et-b" data-i18n="et.o1d">You invite someone; they connect and make their first activity</div></div>
+    </div>
+    <div class="earn-note" data-i18n="et.note">Exact weights and caps are kept private — anti-gaming protection.</div>
+
     <div class="earn-note" data-i18n="earn.note">Volume on Shellnet doesn't count — tokens are testnet. On mainnet: consumption volume and market-making will be added.</div>
   </div>
 </section>
@@ -327,6 +368,7 @@
 <script>
   var DICT = {
     en: {
+      "et.h":"Full list of actions","et.colA":"Action","et.colB":"What counts","et.g1":"Primary market — AI model access (order-book trading)","et.p1":"Place a sell order for access","et.p1d":"You post supply into the order book","et.p2":"Place a buy order for access","et.p2d":"You post demand into the order book","et.p3":"First sale · first purchase","et.p3d":"Your first time entering each side of the market","et.p4":"A trade fills (you sold / you bought)","et.p4d":"Someone matches your order","et.p5":"Real inference consumption","et.p5d":"You actually use the access you bought — the strongest signal","et.p6":"Clean settlement","et.p6d":"The stream closes cleanly, with no dispute","et.g2":"Secondary market — predictions & hedging","et.s1":"Bet on an AI event","et.s1d":"Model release, benchmark, date, etc.","et.s2":"Predict a token's price at date T","et.s2d":"Hedge your future cost","et.s3":"Enter / exit with a full set; maker / taker","et.s3d":"You provide or take liquidity","et.s4":"Order types (GTC / IOC / FOK / POST_ONLY), batch, cancel","et.s4d":"Functional coverage","et.s5":"Claim a payout","et.s5d":"You claim on a resolved market","et.g3":"Off-chain","et.o1":"Referral","et.o1d":"You invite someone; they connect and make their first activity","et.note":"Exact weights and caps are kept private — anti-gaming protection.",
       "consent.label":"I have read and agree to the ","consent.link":"Season Points & Rewards Rules","consent.required":"Please accept the rules to continue","rules.full.link":"Full program rules →",
       "brand.tag":"AI token marketplace","nav.how":"How it works","nav.earn":"What earns",
       "nav.rules":"Rules","nav.marketplace":"Marketplace",
@@ -358,6 +400,7 @@
       "foot.note":"© 2026 GOSH · DEX.DO · Season 1 · Shellnet · Acki Nacki"
     },
     ru: {
+      "et.h":"Полный список действий","et.colA":"Действие","et.colB":"Что это","et.g1":"Первичный рынок — доступ к AI-моделям (торговля в order book)","et.p1":"Выставить заявку на продажу доступа","et.p1d":"Поставил предложение в стакан","et.p2":"Выставить заявку на покупку доступа","et.p2d":"Поставил спрос в стакан","et.p3":"Первая продажа · первая покупка","et.p3d":"Первый вход в рынок на каждой стороне","et.p4":"Сделка состоялась (продал / купил)","et.p4d":"Твою заявку исполнил кто-то другой","et.p5":"Реальное потребление инференса","et.p5d":"Фактически используешь купленный доступ — сильнейший сигнал","et.p6":"Чистое закрытие сделки (settlement)","et.p6d":"Стрим закрылся без спора","et.g2":"Вторичный рынок — предсказания и хедж","et.s1":"Ставка на ИИ-событие","et.s1d":"Релиз модели, бенчмарк, дата и т.п.","et.s2":"Предсказание цены токена к дате T","et.s2d":"Хедж будущей стоимости","et.s3":"Вход / выход парой (full set); maker / taker","et.s3d":"Даёшь или забираешь ликвидность","et.s4":"Типы заявок (GTC / IOC / FOK / POST_ONLY), батч, отмена","et.s4d":"Покрытие функционала","et.s5":"Claim выплаты","et.s5d":"Забираешь по завершённому маркету","et.g3":"Вне сети","et.o1":"Реферал","et.o1d":"Пригласил, тот подключился и сделал первое действие","et.note":"Точные веса и лимиты закрыты — защита от накрутки.",
       "consent.label":"Я ознакомился и согласен с ","consent.link":"Правилами Season Points & Rewards","consent.required":"Отметьте согласие с правилами, чтобы продолжить","rules.full.link":"Полные правила программы →",
       "brand.tag":"маркетплейс AI-токенов","nav.how":"Как работает","nav.earn":"Что приносит",
       "nav.rules":"Правила","nav.marketplace":"Маркетплейс",
