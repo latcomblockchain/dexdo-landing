@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEX.DO Enterprise — Top open-source AI below market</title>
+<meta name="description" content="Join a shared pool on top Nvidia servers and run the leading open-source models below market. From $2,000/mo, one OpenAI-compatible endpoint." />
+<meta property="og:title" content="DEX.DO Enterprise — Top open-source AI below market" />
+<meta property="og:description" content="Join shared top-Nvidia server pools and run leading open-source models below market. From $2,000/mo, OpenAI-compatible." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0B0D; --surface:#101317; --surface2:#14181D; --line:#22272E; --line2:#2D333B;
+    --text:#E9EBEE; --muted:#9AA1AB; --dim:#565d66;
+    --accent:#6AA0FF; --bid:#3DB07A; --glow:rgba(106,160,255,.10);
+    --disp:'Inter Tight',sans-serif; --ui:'Inter',sans-serif; --mono:'IBM Plex Mono',monospace;
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--ui);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:19px}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  h1,h2,h3{font-family:var(--disp);font-weight:600;letter-spacing:-0.02em;margin:0;color:var(--text)}
+  h1{font-size:clamp(40px,7.5vw,72px);line-height:1.02;letter-spacing:-0.03em}
+  h2{font-size:clamp(30px,4.6vw,46px);line-height:1.05}
+  p{margin:0}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--ui);font-weight:600;font-size:18px;padding:16px 30px;border-radius:11px;border:1px solid transparent;cursor:pointer;transition:.16s;white-space:nowrap}
+  .btn-primary{background:var(--text);color:#0a0c0f;border-color:var(--text)}
+  .btn-primary:hover{background:#fff}
+  .btn-ghost{background:transparent;color:var(--text);border-color:var(--line2)}
+  .btn-ghost:hover{border-color:var(--muted)}
+  .btn-sm{padding:10px 18px;font-size:15px}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(10,11,13,.8);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:66px;gap:16px}
+  .brand{font-family:var(--disp);font-weight:700;font-size:20px;display:flex;align-items:center;gap:10px}
+  .brand .tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line2);padding:3px 7px;border-radius:5px}
+  .nav-cta{display:flex;gap:10px}
+
+  section{padding:80px 0;border-bottom:1px solid var(--line)}
+  .hero{position:relative;padding:100px 0 76px;border-bottom:1px solid var(--line)}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(760px 380px at 75% 0%,var(--glow),transparent 70%);pointer-events:none}
+  .hero .in{position:relative;max-width:900px}
+  .lede{color:var(--muted);font-size:clamp(19px,2.3vw,24px);margin-top:24px;max-width:640px;line-height:1.45}
+  .hero-cta{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap}
+  .kpis{display:flex;gap:48px;margin-top:52px;flex-wrap:wrap}
+  .kpi .n{font-family:var(--disp);font-weight:600;font-size:30px}
+  .kpi .l{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+  .sec-head{max-width:760px;margin-bottom:48px}
+  .sec-head .eyebrow{display:block;margin-bottom:16px}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:32px 28px 36px;transition:.18s}
+  .step:hover{border-color:var(--line2);transform:translateY(-3px)}
+  .step .n{font-family:var(--disp);font-weight:700;font-size:15px;color:var(--accent);display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid var(--line2);border-radius:12px;background:rgba(106,160,255,.08);margin-bottom:24px}
+  .step h3{font-size:25px;font-weight:600;margin-bottom:10px}
+  .step p{color:var(--muted);font-size:17px;line-height:1.45}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:34px}
+  .card .eyebrow{margin-bottom:14px;display:block}
+  .card h3{font-size:26px;margin-bottom:12px}
+  .card p{color:var(--muted);font-size:18px;line-height:1.5}
+
+  .calc{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .calc-in{background:var(--surface);padding:34px}
+  .calc-out{background:#0c0f13;padding:34px;display:flex;flex-direction:column;justify-content:center}
+  .field{display:block;margin-bottom:24px}
+  .field label{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .field input,.field select{width:100%;background:#0c0f13;border:1px solid var(--line2);border-radius:10px;padding:15px 15px;color:var(--text);font-family:var(--ui);font-size:19px}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--accent)}
+  .bignum{font-family:var(--disp);font-weight:600;font-size:clamp(42px,6vw,60px);line-height:1;color:var(--bid)}
+  .bignum small{display:block;font-family:var(--mono);font-size:13px;color:var(--muted);font-weight:400;margin-top:12px;letter-spacing:.04em}
+  .today{font-family:var(--mono);font-size:15px;color:var(--muted);margin-top:18px}
+  .disclaimer{font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:22px;line-height:1.5}
+
+  .cta-final{text-align:center;max-width:720px;margin:0 auto}
+  .cta-final .hero-cta{justify-content:center;margin-top:34px}
+  .contact{font-family:var(--mono);font-size:15px;color:var(--muted);margin-top:22px}
+  .contact a{color:var(--accent)}
+
+  .faq{display:grid;gap:12px;max-width:820px}
+  .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:2px 22px}
+  .faq summary{cursor:pointer;list-style:none;padding:20px 0;font-family:var(--disp);font-weight:600;font-size:20px;display:flex;justify-content:space-between;gap:12px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--accent);font-weight:400}
+  .faq details[open] summary::after{content:"−"}
+  .faq .a{padding:0 0 20px;color:var(--muted);font-size:18px;line-height:1.5}
+
+  footer{padding:40px 0 56px;border-bottom:0}
+  .foot-in{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .foot-note{font-family:var(--mono);font-size:12px;color:var(--dim);width:100%;margin-top:12px}
+
+  @media(max-width:800px){ .cols,.calc,.steps{grid-template-columns:1fr} section{padding:56px 0} .kpis{gap:30px} }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <div class="brand">DEX.DO <span class="tag">Enterprise</span></div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://calendar.app.google/dmgML9NftF4WYg7T8" target="_blank" rel="noopener">Book a demo</a>
+      <a class="btn btn-primary btn-sm" href="https://gosh.ai/subscription/login" target="_blank" rel="noopener">Buy</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap in">
+    <span class="eyebrow">Enterprise</span>
+    <h1 style="margin-top:18px">Run the top open-source model at the best possible price.</h1>
+    <p class="lede">Join a shared pool on top Nvidia servers and get compute below market. From $2,000 a month, one OpenAI-compatible endpoint.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://gosh.ai/subscription/login" target="_blank" rel="noopener">Buy</a>
+      <a class="btn btn-ghost" href="https://calendar.app.google/dmgML9NftF4WYg7T8" target="_blank" rel="noopener">Book a demo</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="n">from $2,000<span style="font-size:16px;color:var(--muted)">/mo</span></div><div class="l">Commit</div></div>
+      <div class="kpi"><div class="n">Below market</div><div class="l">Shared Nvidia pools</div></div>
+      <div class="kpi"><div class="n">Drop-in</div><div class="l">OpenAI-compatible</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">How it works</span><h2>Three steps.</h2></div>
+    <div class="steps">
+      <div class="step"><span class="n">01</span><h3>Commit a budget</h3><p>Pick GLM 5.3, from $2,000 a month.</p></div>
+      <div class="step"><span class="n">02</span><h3>Join the pool</h3><p>Shared top-Nvidia server pools bring compute below market.</p></div>
+      <div class="step"><span class="n">03</span><h3>Ship</h3><p>Fixed price, on-chain escrow, drop-in endpoint.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- POOLS + UPGRADE -->
+<section id="more">
+  <div class="wrap">
+    <div class="cols">
+      <div class="card">
+        <span class="eyebrow">Shared pools</span>
+        <h3>Top Nvidia servers, shared cost.</h3>
+        <p>Join a pool on top-tier Nvidia hardware and run the leading open-source models at compute below market. You don't buy servers, you buy your share.</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">Upgrade path</span>
+        <h3>Subscribe now, move up later.</h3>
+        <p>Take a subscription today and you get the option to move to a more advanced model as it lands, on the same deal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">FAQ</span><h2>Straight answers.</h2></div>
+    <div class="faq">
+      <details open><summary>How is the price set?</summary><div class="a">You commit a monthly budget and we run GLM 5.3 on our own tuned hardware, which lands the per-token price below market. Fixed for the term, quoted per deal.</div></details>
+      <details><summary>What do you mean by shared pools?</summary><div class="a">Your budget joins a shared pool running on top Nvidia servers. Aggregated demand is what brings compute below market, and you get a fixed per-token price for the term.</div></details>
+      <details><summary>Do I change my code?</summary><div class="a">No. It's OpenAI-compatible. Point your base URL at us.</div></details>
+      <details><summary>Minimum?</summary><div class="a">$2,000 a month. Your budget sits in on-chain escrow and is released as you use it.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- BUY / CTA -->
+<section id="buy" style="border-bottom:0">
+  <div class="wrap">
+    <div class="cta-final">
+      <span class="eyebrow">Get started</span>
+      <h2 style="margin-top:14px">Commit from $2,000. Run GLM 5.3 below market.</h2>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://gosh.ai/subscription/login" target="_blank" rel="noopener">Buy</a>
+        <a class="btn btn-ghost" href="https://calendar.app.google/dmgML9NftF4WYg7T8" target="_blank" rel="noopener">Book a demo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div class="brand" style="font-size:16px">DEX.DO <span class="tag">Enterprise</span></div>
+    <div class="foot-note">© 2026 GOSH · DEX.DO · pre-launch · testnet on Acki Nacki. Figures are estimates, not a quote.</div>
+  </div>
+</footer>
+
+</body>
+</html>
